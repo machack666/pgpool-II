@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_string.c,v 1.1 2006/09/08 03:36:43 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_string.c,v 1.1.1.1 2006/09/08 03:36:43 t-ishii Exp $
  *
  * Copyright (c) 2006, pgpool Global Development Group
  *

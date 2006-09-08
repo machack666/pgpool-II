@@ -1,5 +1,5 @@
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp_attach_node.c,v 1.1 2006/09/08 03:36:49 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp_attach_node.c,v 1.1.1.1 2006/09/08 03:36:49 t-ishii Exp $
  *
  * Client program to send "attach node" command.
  */

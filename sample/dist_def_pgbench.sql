@@ -1,4 +1,4 @@
--- $Header: /cvsroot/pgpool/pgpool-II/sample/dist_def_pgbench.sql,v 1.1 2006/09/08 03:36:17 t-ishii Exp $
+-- $Header: /cvsroot/pgpool/pgpool-II/sample/dist_def_pgbench.sql,v 1.1.1.1 2006/09/08 03:36:17 t-ishii Exp $
 
 INSERT INTO pgpool_catalog.dist_def VALUES (
     'bench_parallel',
