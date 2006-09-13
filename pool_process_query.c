@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.1 2006/09/08 03:36:08 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.2 2006/09/13 10:21:53 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1941,6 +1941,12 @@ static POOL_STATUS CopyDataRows(POOL_CONNECTION *frontend,
 			{
 				if (pool_flush(CONNECTION(backend, i)) <0)
 					return POOL_END;
+
+				if (pool_config->replication_strict)
+				{
+					if (synchronize(CONNECTION(backend, i)))
+						return POOL_END;
+				}
 			}
 		}
 	}
