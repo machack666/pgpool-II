@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.1 2006/09/08 03:36:04 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.2 2006/09/14 01:56:03 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1126,9 +1126,10 @@ int health_check(void)
 
 		if (write(fd, &mysp, sizeof(mysp)) < 0)
 		{
-			pool_error("health check failed during write. host %s at port %d is down",
+			pool_error("health check failed during write. host %s at port %d is down. reason: %s",
 					   BACKEND_INFO(i).backend_hostname,
-					   BACKEND_INFO(i).backend_port);
+					   BACKEND_INFO(i).backend_port,
+					   strerror(errno));
 			close(fd);
 			return i+1;
 		}
@@ -1137,9 +1138,10 @@ int health_check(void)
 
 		if (write(fd, "X", 1) < 0)
 		{
-			pool_error("health check failed during write. host %s at port %d is down",
+			pool_error("health check failed during write. host %s at port %d is down. reason: %s. Perhaps wrong health check user?",
 					   BACKEND_INFO(i).backend_hostname,
-					   BACKEND_INFO(i).backend_port);
+					   BACKEND_INFO(i).backend_port,
+					   strerror(errno));
 			close(fd);
 			return i+1;
 		}
