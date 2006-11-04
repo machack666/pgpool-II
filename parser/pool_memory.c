@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.1 2006/09/08 03:36:42 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.2 2006/11/04 07:38:36 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -154,7 +154,7 @@ void pool_memory_free(POOL_MEMORY_POOL *pool, void *ptr)
 	{
 		POOL_BLOCK *block, *ptr = NULL;
 
-		for (block = pool->largeblocks; block; ptr = block)
+		for (block = pool->largeblocks; block; ptr = block, block = block->next)
 		{
 			if (block->block == chunk)
 				break;
