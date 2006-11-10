@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.2 2006/11/04 07:38:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.3 2006/11/10 03:48:51 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -84,7 +84,7 @@ void *pool_memory_alloc(POOL_MEMORY_POOL *pool, unsigned int size)
 	}
 	else
 	{
-		int fidx = get_free_index(size + POOL_HEADER_SIZE);
+		int fidx = get_free_index(size);
 		int allocsize = 1 << (fidx + ALIGN);
 
 		/* pick up from freelist */
@@ -150,6 +150,9 @@ void pool_memory_free(POOL_MEMORY_POOL *pool, void *ptr)
 	POOL_CHUNK *chunk = ptr - POOL_HEADER_SIZE;
 	int fidx;
 
+	if (ptr == NULL)
+		return;
+
 	if (chunk->header.size > MAX_SIZE)
 	{
 		POOL_BLOCK *block, *ptr = NULL;
@@ -158,6 +161,12 @@ void pool_memory_free(POOL_MEMORY_POOL *pool, void *ptr)
 		{
 			if (block->block == chunk)
 				break;
+		}
+
+		if (block == NULL)
+		{
+			pool_log("An adress \"%p\" does not exist in memory pool.", chunk);
+			return;
 		}
 
 		if (ptr == NULL)
