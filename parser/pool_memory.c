@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.3 2006/11/10 03:48:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.4 2006/11/13 05:02:50 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -61,7 +61,7 @@ void *pool_memory_alloc(POOL_MEMORY_POOL *pool, unsigned int size)
 	POOL_BLOCK *block;
 	POOL_CHUNK *chunk;
 
-	if (size > MAX_SIZE)
+	if ((size + POOL_HEADER_SIZE) > MAX_SIZE)
 	{
 		block = malloc(sizeof(POOL_BLOCK));
 		if (block == NULL)
@@ -84,7 +84,7 @@ void *pool_memory_alloc(POOL_MEMORY_POOL *pool, unsigned int size)
 	}
 	else
 	{
-		int fidx = get_free_index(size);
+		int fidx = get_free_index(size + POOL_HEADER_SIZE);
 		int allocsize = 1 << (fidx + ALIGN);
 
 		/* pick up from freelist */
