@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.6 2006/12/02 13:41:13 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.7 2006/12/04 05:49:12 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2879,7 +2879,7 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 				}
 			}
 
-			if (kind == 'C')
+			if (kind == 'C')	/* packet kind is "Command Complete"? */
 			{
 				char *rows;
 
@@ -2888,7 +2888,23 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 					delete_or_update = 1;
 
 					rows += 7;
-					command_ok_row_count += atoi(rows);
+
+					/*
+					 * if we are in the parallel mode, we have to sum up the number
+					 * of affected rows
+					 */
+					if (PARALLEL_MODE)
+					{
+						command_ok_row_count += atoi(rows);
+					}
+
+					/*
+					 * else we just set the number of affected rows of the master node
+					 */
+					else if (IS_MASTER_NODE_ID(i))
+					{
+						command_ok_row_count = atoi(rows);
+					}
 				}
 			}
 		}
