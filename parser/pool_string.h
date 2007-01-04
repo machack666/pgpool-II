@@ -1,8 +1,8 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_string.h,v 1.1 2006/09/08 03:36:43 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_string.h,v 1.2 2007/01/04 17:27:11 devrim Exp $
  *
- * Copyright (c) 2006, pgpool Global Development Group
+ * Copyright (c) 2006-2007, pgpool Global Development Group
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby

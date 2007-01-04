@@ -1,12 +1,12 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_signal.h,v 1.1 2006/09/08 03:36:08 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_signal.h,v 1.2 2007/01/04 17:27:10 devrim Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
  *
- * Portions Copyright (c) 2003-2006,	PgPool Global Development Group
+ * Portions Copyright (c) 2003-2007,	PgPool Global Development Group
  * Portions Copyright (c) 2004, PostgreSQL Global Development Group
  *
  * Permission to use, copy, modify, and distribute this software and

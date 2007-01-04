@@ -1,11 +1,11 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_rewrite_query.c,v 1.2 2006/10/04 05:57:02 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_rewrite_query.c,v 1.3 2007/01/04 17:27:10 devrim Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
  *
- * Copyright (c) 2003-2006	PgPool Global Development Group
+ * Copyright (c) 2003-2007	PgPool Global Development Group
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby
