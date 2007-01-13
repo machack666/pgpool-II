@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_signal.h,v 1.2 2007/01/04 17:27:10 devrim Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_signal.h,v 1.3 2007/01/13 14:56:45 yamaguti Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -25,7 +25,7 @@
  */
 
 #ifndef POOL_SIGNAL_H
-#define POOL_SIGNALH
+#define POOL_SIGNAL_H
 
 /*
  * Signal stuff. Stolen from PostgreSQL source code.
