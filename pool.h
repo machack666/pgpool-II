@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.3 2007/01/04 17:27:10 devrim Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.4 2007/02/12 02:32:08 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -383,7 +383,7 @@ extern int pool_do_reauth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp);
 
 extern int pool_init_cp(void);
 extern POOL_CONNECTION_POOL *pool_create_cp(void);
-extern POOL_CONNECTION_POOL *pool_get_cp(char *user, char *database, int protoMajor);
+extern POOL_CONNECTION_POOL *pool_get_cp(char *user, char *database, int protoMajor, int check_socket);
 extern void pool_discard_cp(char *user, char *database, int protoMajor);
 
 extern POOL_STATUS ErrorResponse(POOL_CONNECTION *frontend, 

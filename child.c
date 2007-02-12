@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.3 2007/01/04 17:27:10 devrim Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.4 2007/02/12 02:32:08 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -248,7 +248,7 @@ void do_child(int unix_fd, int inet_fd)
 
 		/* look for existing connection */
 		found = 0;
-		backend = pool_get_cp(sp->user, sp->database, sp->major);
+		backend = pool_get_cp(sp->user, sp->database, sp->major, 1);
 
 		if (backend != NULL)
 		{
