@@ -1,5 +1,5 @@
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp.c,v 1.1 2006/09/08 03:36:49 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp.c,v 1.2 2007/02/16 11:31:55 y-asaba Exp $
  *
  * Handles PCP connection, and protocol communication with pgpool-II
  * These are client APIs. Server program should use APIs in pcp_stream.c
@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <netinet/in.h>

@@ -1,5 +1,5 @@
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp_stream.c,v 1.1 2006/09/08 03:36:49 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp_stream.c,v 1.2 2007/02/16 11:31:55 y-asaba Exp $
  *
  * PCP buffer management module.
  */
@@ -9,6 +9,9 @@
 #include <errno.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "pcp.h"
 #include "pcp_stream.h"
