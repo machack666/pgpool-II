@@ -1,6 +1,6 @@
 #
-# pgpool configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.2 2006/11/29 21:54:26 devrim Exp $
+# pgpool-II configuration file sample
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.3 2007/02/20 06:02:48 devrim Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
