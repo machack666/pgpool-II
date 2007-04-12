@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.11 2007/03/01 04:06:38 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.12 2007/04/12 08:30:43 devrim Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2553,7 +2553,7 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 	strncpy(status[i].desc, "queries issued at the end of session", MAXDESCLEN);
 	i++;
 
-	strncpy(status[i].name, "print_timestamp", MAXDESCLEN);
+	strncpy(status[i].name, "print_timestamp", MAXNAMELEN);
 	snprintf(status[i].value, MAXVALLEN, "%d", pool_config->print_timestamp);
 	strncpy(status[i].desc, "if true print time stamp to each log line", MAXDESCLEN);
 	i++;
@@ -2678,24 +2678,24 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 		if (BACKEND_INFO(j).backend_port == 0)
 			continue;
 
-		snprintf(status[i].name, MAXVALLEN, "backend_hostname%d", j);
+		snprintf(status[i].name, MAXNAMELEN, "backend_hostname%d", j);
 		snprintf(status[i].value, MAXVALLEN, "%s", BACKEND_INFO(j).backend_hostname);
-		snprintf(status[i].desc, MAXVALLEN, "backend #%d hostname", j);
+		snprintf(status[i].desc, MAXDESCLEN, "backend #%d hostname", j);
 		i++;
 
-		snprintf(status[i].name, MAXVALLEN, "backend_port%d", j);
+		snprintf(status[i].name, MAXNAMELEN, "backend_port%d", j);
 		snprintf(status[i].value, MAXVALLEN, "%d", BACKEND_INFO(j).backend_port);
-		snprintf(status[i].desc, MAXVALLEN, "backend #%d port number", j);
+		snprintf(status[i].desc, MAXDESCLEN, "backend #%d port number", j);
 		i++;
 
-		snprintf(status[i].name, MAXVALLEN, "backend_weight%d", j);
+		snprintf(status[i].name, MAXNAMELEN, "backend_weight%d", j);
 		snprintf(status[i].value, MAXVALLEN, "%f", BACKEND_INFO(j).backend_weight);
-		snprintf(status[i].desc, MAXVALLEN, "weight of backend #%d", j);
+		snprintf(status[i].desc, MAXDESCLEN, "weight of backend #%d", j);
 		i++;
 
-		snprintf(status[i].name, MAXVALLEN, "backend status%d", j);
+		snprintf(status[i].name, MAXNAMELEN, "backend status%d", j);
 		snprintf(status[i].value, MAXVALLEN, "%d", BACKEND_INFO(j).backend_status);
-		snprintf(status[i].desc, MAXVALLEN, "status of backend #%d", j);
+		snprintf(status[i].desc, MAXDESCLEN, "status of backend #%d", j);
 		i++;
 	}
 
