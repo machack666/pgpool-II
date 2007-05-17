@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.3 2007/02/20 06:02:48 devrim Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.4 2007/05/17 06:46:02 yamaguti Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -105,6 +105,14 @@ ignore_leading_white_space = false
 # debugging.
 log_statement = false
 
+# If true, incoming connections will be printed to the log.
+log_connections = false
+
+# If true, hostname will be shown in ps status. Also shown in
+# connection log if log_connections = true.
+# Be warned that this feature will add overhead to look up hostname.
+log_hostname = false
+
 # if non 0, run in parallel query mode
 parallel_mode = false
 
@@ -130,3 +138,10 @@ system_db_password = ''
 #backend_hostname1 = 'host2'
 #backend_port1 = 5433
 #backend_weight1 = 1
+
+# - HBA -
+
+# If true, use pool_hba.conf for client authentication. In pgpool-II
+# 1.1, the default value is false. The default value will be true in
+# 1.2.
+enable_pool_hba = false

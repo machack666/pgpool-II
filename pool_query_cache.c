@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_query_cache.c,v 1.4 2007/02/16 11:31:55 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_query_cache.c,v 1.5 2007/05/17 06:46:02 yamaguti Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -545,7 +545,7 @@ static int ForwardCacheToFrontend(POOL_CONNECTION *frontend, char *cache, char t
 	int sendlen;
 	char *binary_cache = NULL;
 
-	binary_cache = PQunescapeBytea(cache, &sendlen);
+	binary_cache = (char *)PQunescapeBytea((unsigned char *)cache, (unsigned int *)&sendlen);
 	if (malloc_failed(binary_cache))
 		return -1;
 
