@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.15 2007/05/17 06:46:02 yamaguti Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.16 2007/05/22 06:28:41 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3272,8 +3272,13 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 		}
 	}
 
-	if (len <= 0)
+	if (len == 0)
 		return POOL_CONTINUE;
+	else if (len < 0)
+	{
+		pool_error("SimpleForwardToBackend: invalid message length");
+		return POOL_END;
+	}
 
 	p = pool_read2(frontend, len);
 	if (p == NULL)
