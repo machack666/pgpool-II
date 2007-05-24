@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.5 2007/01/04 17:27:11 devrim Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.6 2007/05/24 06:38:30 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -204,7 +204,9 @@ void *pool_memory_realloc(POOL_MEMORY_POOL *pool, void *ptr, unsigned int size)
 		return ptr;
 
 	fidx = get_free_index(size + POOL_HEADER_SIZE);
-	if (fidx == get_free_index(chunk->header.size))
+	if (size + POOL_HEADER_SIZE <= MAX_SIZE &&
+		chunk->header.size <= MAX_SIZE &&
+		fidx == get_free_index(chunk->header.size))
 	{
 		return ptr;
 	}
