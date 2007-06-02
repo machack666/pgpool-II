@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.18 2007/05/29 01:58:10 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.19 2007/06/02 00:54:40 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1136,7 +1136,7 @@ static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 	}
 
 	while ((kind = pool_read_kind(backend)),
-		   (kind != 'C' && kind != 'E' && kind != 'l' && kind != 's'))
+		   (kind != 'C' && kind != 'E' && kind != 'I' && kind != 's'))
 	{
 		if (kind < 0)
 		{
