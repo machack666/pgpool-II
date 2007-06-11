@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.20 2007/06/07 02:38:12 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.21 2007/06/11 03:01:22 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -976,6 +976,7 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 		}
 		else if (REPLICATION && is_select_query(node1, string1) && !is_sequence_query(node1))
 		{
+			selected_slot = MASTER_NODE_ID;
 			replication_was_enabled = 1;
 			REPLICATION = 0;
 			LOAD_BALANCE_STATUS(MASTER_NODE_ID) = LOAD_SELECTED;
@@ -1084,6 +1085,7 @@ static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 
 		else if (REPLICATION && is_select_query((Node *)p_stmt->query, string1) && !is_sequence_query((Node *)p_stmt->query))
 		{
+			selected_slot = MASTER_NODE_ID;
 			replication_was_enabled = 1;
 			REPLICATION = 0;
 			LOAD_BALANCE_STATUS(MASTER_NODE_ID) = LOAD_SELECTED;
