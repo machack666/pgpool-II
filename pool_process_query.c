@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.22 2007/06/18 02:34:53 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23 2007/06/18 02:40:29 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2104,7 +2104,7 @@ static POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 
 	pool_write(frontend, &pid1, sizeof(pid1));
 	status = pool_write_and_flush(frontend, condition1, len1);
-	free(condition);
+	free(condition1);
 	return status;
 }
 
