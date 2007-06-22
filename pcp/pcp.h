@@ -1,5 +1,5 @@
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp.h,v 1.1 2006/09/08 03:36:48 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp.h,v 1.2 2007/06/22 09:50:51 y-asaba Exp $
  *
  * pcp.h - master header file.
  */
@@ -44,6 +44,7 @@ extern void free_systemdb_info(SystemDBInfo * si);
 extern int pcp_detach_node(int nid);
 extern int pcp_attach_node(int nid);
 extern void pcp_set_timeout(long sec);
+extern int pcp_recovery_node(int nid);
 
 /* ------------------------------
  * pcp_error.c
