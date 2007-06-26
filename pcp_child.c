@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.4 2007/06/22 09:50:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.5 2007/06/26 01:35:52 y-asaba Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -76,12 +76,9 @@ pcp_do_child(int unix_fd, int inet_fd, char *pcp_conf_file)
 	char salt[4];
 	int random_salt = 0;
 	int i;
-
 	char tos;
 	int rsize;
 	char *buf = NULL;
-
-	char psbuf[NI_MAXHOST + 128];
 
 	pool_debug("I am PCP %d", getpid());
 
