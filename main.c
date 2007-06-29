@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.8 2007/06/28 12:35:12 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.9 2007/06/29 14:15:50 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -62,7 +62,6 @@
 		if (sigchld_request) \
 		{ \
 			reaper(); \
-			sigchld_request = 0; \
 		} \
     } while (0)
 
@@ -1362,6 +1361,7 @@ static void reaper(void)
 	POOL_SETMASK(&BlockSig);
 
 	pool_debug("reap_handler called");
+	sigchld_request = 0;
 
 	if (exiting)
 	{
