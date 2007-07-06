@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_type.h,v 1.4 2007/06/22 09:50:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_type.h,v 1.5 2007/07/06 08:32:57 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -109,6 +109,7 @@ typedef struct {
 	int			minor;	/* protocol minor version */
 	int			counter; /* used counter */
 	time_t 		create_time; /* connection creation time */
+	int load_balancing_node; /* load balancing node */
 } ConnectionInfo;
 
 
