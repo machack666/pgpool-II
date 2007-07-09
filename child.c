@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.7 2007/07/06 08:32:57 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.8 2007/07/09 01:29:36 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -31,6 +31,9 @@
 #include <netdb.h>
 #ifdef HAVE_NETINET_TCP_H
 #include <netinet/tcp.h>
+#endif
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
 #endif
 
 #include <signal.h>
@@ -1675,7 +1678,7 @@ static RETSIGTYPE wakeup_handler(int sig)
 
 
 /*
- *
+ * Select load balancing node
  */
 static int select_load_balancing_node(void)
 {

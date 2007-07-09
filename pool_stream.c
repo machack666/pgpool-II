@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.2 2007/01/04 17:27:10 devrim Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.3 2007/07/09 01:29:36 y-asaba Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -23,6 +23,10 @@
 */
 
 #include "config.h"
+
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
