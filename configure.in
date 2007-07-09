@@ -4,7 +4,7 @@ AC_INIT
 dnl Checks for programs.
 AC_PROG_CC
 
-AM_INIT_AUTOMAKE(pgpool-II, 2.0-devel)
+AM_INIT_AUTOMAKE(pgpool-II, 1.1.1)
 AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 
@@ -27,7 +27,7 @@ AC_CHECK_LIB(resolv,   main)
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS(fcntl.h unistd.h getopt.h netinet/tcp.h netinet/in.h netdb.h sys/param.h sys/types.h sys/socket.h sys/un.h sys/time.h sys/sem.h sys/shm.h)
+AC_CHECK_HEADERS(fcntl.h unistd.h getopt.h netinet/tcp.h netinet/in.h netdb.h sys/param.h sys/types.h sys/socket.h sys/un.h sys/time.h sys/sem.h sys/shm.h sys/select.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
