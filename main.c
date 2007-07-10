@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.12 2007/07/09 05:18:14 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.13 2007/07/10 09:56:06 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -127,7 +127,7 @@ static int stop_sig = SIGTERM;	/* stopping signal default value */
 static int health_check_timer_expired;		/* non 0 if health check timer expired */
 
 POOL_REQUEST_INFO *Req_info;		/* request info area in shared memory */
-volatile int *InRecovery; /* non 0 if recovery is started */
+volatile sig_atomic_t *InRecovery; /* non 0 if recovery is started */
 static volatile sig_atomic_t failover_request = 0;
 static volatile sig_atomic_t sigchld_request = 0;
 static volatile sig_atomic_t wakeup_request = 0;
