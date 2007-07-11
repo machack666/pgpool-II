@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.2 2007/01/04 17:27:10 devrim Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.2.2.1 2007/07/11 02:15:30 y-asaba Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -749,4 +749,32 @@ static int consume_pending_data(POOL_CONNECTION *cp, void *data, int len)
 		cp->po += consume_size;
 
 	return consume_size;
+}
+
+/*
+ * pool_unread: Put back data to input buffer
+ */
+int pool_unread(POOL_CONNECTION *cp, void *data, int len)
+{
+	void *p = cp->hp;
+	int n = cp->len + len;
+	int realloc_size;
+	
+	if (cp->bufsz < n)
+	{
+		realloc_size = (n/READBUFSZ+1)*READBUFSZ;
+		p = realloc(cp->hp, realloc_size);
+		if (p == NULL)
+		{
+			pool_error("pool_unread: realloc failed");
+			return -1;
+		}
+		cp->hp = p;
+	}
+	if (cp->len != 0)
+		memmove(p + len, cp->hp + cp->po, cp->len);
+	memmove(p, data, len);
+	cp->len = n;
+	cp->po = 0;
+	return 0;
 }

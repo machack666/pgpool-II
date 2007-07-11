@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.1 2007/06/27 08:30:20 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.2 2007/07/11 02:15:30 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -294,7 +294,7 @@ typedef struct {
 					   pool_config->backend_desc->num_backends))
 #endif
 #define NUM_BACKENDS (in_load_balance? (selected_slot+1) : \
-					  (((!REPLICATION && !PARALLEL_MODE) && !MASTER_SLAVE)? Req_info->master_node_id+1: \
+					  (((!REPLICATION && !PARALLEL_MODE) && !MASTER_SLAVE) ? Req_info->master_node_id+1: \
 					   pool_config->backend_desc->num_backends))
 #define BACKEND_INFO(backend_id) (pool_config->backend_desc->backend_info[(backend_id)])
 #define LOAD_BALANCE_STATUS(backend_id) (pool_config->load_balance_status[(backend_id)])
@@ -395,6 +395,7 @@ extern int pool_flush(POOL_CONNECTION *cp);
 extern int pool_flush_it(POOL_CONNECTION *cp);
 extern int pool_write_and_flush(POOL_CONNECTION *cp, void *buf, int len);
 extern char *pool_read_string(POOL_CONNECTION *cp, int *len, int line);
+extern int pool_unread(POOL_CONNECTION *cp, void *data, int len);
 
 extern int pool_do_auth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *backend);
 extern int pool_do_reauth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp);
