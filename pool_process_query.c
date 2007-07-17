@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.32 2007/07/17 06:04:32 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.31.2.1 2007/07/17 08:58:42 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -51,9 +51,6 @@
 #define INIT_STATEMENT_LIST_SIZE 8
 
 #define DEADLOCK_ERROR_CODE "40P01"
-#define ADMIN_SHUTDOWN_ERROR_CODE "57P01"
-#define CRASH_SHUTDOWN_ERROR_CODE "57P02"
-
 #define POOL_ERROR_QUERY "send invalid query from pgpool to abort transaction"
 
 typedef struct {
@@ -199,9 +196,9 @@ static void query_cache_register(char kind, POOL_CONNECTION *frontend, char *dat
 static POOL_STATUS start_internal_transaction(POOL_CONNECTION_POOL *backend, Node *node);
 static POOL_STATUS end_internal_transaction(POOL_CONNECTION_POOL *backend);
 static int extract_ntuples(char *message);
-static int detect_error(POOL_CONNECTION *master, char *error_code, int major, bool unread);
+static int detect_error(POOL_CONNECTION *master, char *error_code, int major);
 static int detect_deadlock_error(POOL_CONNECTION *master, int major);
-static int detect_postmaster_down_error(POOL_CONNECTION *master, int major);
+
 
 POOL_STATUS pool_process_query(POOL_CONNECTION *frontend, 
 							   POOL_CONNECTION_POOL *backend,
@@ -275,7 +272,7 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 		if (is_cache_empty(frontend, backend))
 		{
 			struct timeval timeout;
-			int num_fds, was_error = 0;
+			int num_fds;
 
 			timeout.tv_sec = 1;
 			timeout.tv_usec = 0;
@@ -324,27 +321,12 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 				return POOL_CONTINUE;
 			}
 
-			for (i = 0; i < NUM_BACKENDS; i++)
+			if (FD_ISSET(MASTER(backend)->fd, &readmask))
 			{
-				if (VALID_BACKEND(i) && FD_ISSET(CONNECTION(backend, i)->fd, &readmask))
-				{
-					if (detect_postmaster_down_error(CONNECTION(backend, i), MAJOR(backend)))
-					{
-						was_error = 1;
-						notice_backend_error(i);
-						sleep(5);
-						break;
-					}
-
-					status = read_kind_from_backend(frontend, backend, &kind);
-					if (status != POOL_CONTINUE)
-						return status;
-					break;
-				}
+				status = read_kind_from_backend(frontend, backend, &kind);
+				if (status != POOL_CONTINUE)
+					return status;
 			}
-
-			if (was_error)
-				continue;
 
 			if (!connection_reuse)
 			{
@@ -864,21 +846,26 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 
 		if (pool_config->parallel_mode)
 		{
-			char *parallel_query = NULL;
-
 			/* Do select pool_parallel ? */
-			parallel_query = is_parallel_query(node,backend);
-			if (parallel_query)
+			RewriteQuery *r_query = is_parallel_query(node,backend);
+
+			if (r_query->r_code == SEND_PARALLEL_ENGINE)
 			{
-				POOL_STATUS stats = pool_parallel_exec(frontend,backend,parallel_query, node,true);
+				POOL_STATUS stats = pool_parallel_exec(frontend,backend,r_query->rewrite_query, node,true);
 				free_parser();
 				return stats;
 			}
-
-			/* rewrite_query_phase */
+			else if(r_query->r_code == SEND_LOADBALANCE_ENGINE)
 			{
-				RewriteQuery *r_query = rewrite_query_stmt(node,frontend,backend);
-				if(r_query->type == T_InsertStmt)
+				string = r_query->rewrite_query;
+				len = strlen(string)+1;
+				pool_debug("SimpleQuery: parallel_mode(loadbalance_query)=%s",string);
+			}
+			else
+			{
+				/* rewrite_query_phase */
+				r_query = rewrite_query_stmt(node,frontend,backend);
+				if(r_query->type == T_InsertStmt && r_query->r_code != INSERT_DIST_NO_RULE)
 				{
 					free_parser();
 					return r_query->status;
@@ -4805,26 +4792,9 @@ static int extract_ntuples(char *message)
 	return atoi(rows);
 }
 
-static int detect_postmaster_down_error(POOL_CONNECTION *backend, int major)
+static int detect_deadlock_error(POOL_CONNECTION *master, int major)
 {
-	int r =  detect_error(backend, ADMIN_SHUTDOWN_ERROR_CODE, major, false);
-	if (r)
-	{
-		pool_debug("detect_stop_postmaster_error: receive admin shutdown error from a node.");
-		return r;
-	}
-
-	r = detect_error(backend, CRASH_SHUTDOWN_ERROR_CODE, major, false);
-	if (r == 1)
-	{
-		pool_debug("detect_stop_postmaster_error: receive crash shutdown error from a node.");
-	}
-	return r;
-}
-
-static int detect_deadlock_error(POOL_CONNECTION *backend, int major)
-{
-	int r =  detect_error(backend, DEADLOCK_ERROR_CODE, major, true);
+	int r =  detect_error(master, DEADLOCK_ERROR_CODE, major);
 	if (r == 1)
 		pool_debug("detect_deadlock_error: receive deadlock error from master node.");
 	return r;
@@ -4833,13 +4803,19 @@ static int detect_deadlock_error(POOL_CONNECTION *backend, int major)
 /*
  * detect_error: Detect specified error from error code.
  */
-static int detect_error(POOL_CONNECTION *backend, char *error_code, int major, bool unread)
+static int detect_error(POOL_CONNECTION *backend, char *error_code, int major)
 {
 	int is_error = 0;
 	char kind;
 	int readlen = 0, len;
-	static char buf[1024]; /* memory space is large enough */
+	char *buf;
 	char *p, *str;
+
+	if ((buf = malloc(1024)) == NULL)
+	{
+		pool_error("detect_error: malloc failed");
+		return -1;
+	}
 
 	if (pool_read(backend, &kind, sizeof(kind)))
 		return POOL_END;
@@ -4865,6 +4841,15 @@ static int detect_error(POOL_CONNECTION *backend, char *error_code, int major, b
 			str = malloc(len);
 			pool_read(backend, str, len);
 			readlen += len;
+			if (readlen > 1024)
+			{
+				buf = realloc(buf, readlen);
+				if (buf == NULL)
+				{
+					pool_error("detect_error: malloc failed");
+					return -1;
+				}
+			}
 			memcpy(p, str, len);
 
 			/*
@@ -4891,14 +4876,20 @@ static int detect_error(POOL_CONNECTION *backend, char *error_code, int major, b
 		{
 			str = pool_read_string(backend, &len, 0);
 			readlen += len;
+			if (readlen > 1024)
+			{
+				buf = realloc(buf, readlen);
+				if (buf == NULL)
+				{
+					pool_error("detect_error: malloc failed");
+					return -1;
+				}
+			}
 			memcpy(p, str, len);
 		}
 	}
-	if (unread || !is_error)
-	{
-		if (pool_unread(backend, buf, readlen) != 0)
-			is_error = -1;
-	}
-
+	if (pool_unread(backend, buf, readlen) != 0)
+		is_error = -1;
+	free(buf);
 	return is_error;
 }
