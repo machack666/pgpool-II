@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.14 2007/07/23 04:37:35 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.15 2007/07/23 05:24:09 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -280,7 +280,6 @@ int main(int argc, char **argv)
 					pool_shmem_exit(1);
 					exit(1);
 				}
-				pool_log("xxx %d", pid);
 				pool_shmem_exit(0);
 				exit(0);
 		}
