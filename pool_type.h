@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_type.h,v 1.5 2007/07/06 08:32:57 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_type.h,v 1.6 2007/07/23 04:37:35 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -91,6 +91,7 @@ typedef struct {
 	int backend_port;	/* backend port numbers */
 	BACKEND_STATUS backend_status;	/* backend status */
 	double backend_weight;	/* normalized backend load balance ratio */
+	double unnormalized_weight; /* descripted parameter */
 	char backend_data_directory[MAX_PATH_LENGTH];
 } BackendInfo;
 

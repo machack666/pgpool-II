@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.8 2007/07/10 09:56:07 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.9 2007/07/23 04:37:35 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -70,6 +70,13 @@ typedef enum {
     POOL_ERROR,
     POOL_FATAL
 } POOL_STATUS;
+
+
+typedef enum {
+	INIT_CONFIG = 1,   /* 0x01 */
+	RELOAD_CONFIG = 2  /* 0x02 */
+} POOL_CONFIG_CONTEXT;
+
 
 /* protocol major version numbers */
 #define PROTO_MAJOR_V2	2
@@ -365,6 +372,7 @@ typedef struct {
 /*
  * global variables
  */
+extern pid_t mypid; /* parent pid */
 extern POOL_CONFIG *pool_config;	/* configuration values */
 extern POOL_CONNECTION_POOL *pool_connection_pool;	/* connection pool */
 extern long int weight_master;	/* normalized weight of master (0-RAND_MAX range) */
@@ -377,14 +385,18 @@ extern int master_slave_dml;	/* non 0 if master/slave mode is specified in confi
 extern POOL_REQUEST_INFO *Req_info;
 extern volatile sig_atomic_t *InRecovery;
 extern char remote_ps_data[];		/* used for set_ps_display */
+extern volatile sig_atomic_t got_sighup;
 
 /*
  * public functions
  */
+extern char *get_config_file_name(void);
+extern char *get_hba_file_name(void);
 extern void pool_error(const char *fmt,...);
 extern void pool_debug(const char *fmt,...);
 extern void pool_log(const char *fmt,...);
-extern int pool_get_config(char *confpath);
+extern int pool_init_config(void);
+extern int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context);
 extern void do_child(int unix_fd, int inet_fd);
 extern void pcp_do_child(int unix_fd, int inet_fd, char *pcp_conf_file);
 extern int pool_init_cp(void);
