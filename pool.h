@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.2 2007/07/11 02:15:30 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.3 2007/07/23 06:54:15 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -140,6 +140,7 @@ typedef struct {
 	int replication_stop_on_mismatch;		/* if there's a data mismatch between master and secondary
 											 * start degenration to stop replication mode
 											 */
+	int replicate_select; /* if non 0, replicate SELECT statement when load balancing is disabled. */
 	char **reset_query_list;		/* comma separated list of quries to be issued at the end of session */
 
 	int print_timestamp;		/* if non 0, print time stamp to each log line */

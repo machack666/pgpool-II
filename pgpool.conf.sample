@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.5 2007/06/22 09:50:51 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.4.2.1 2007/07/23 06:54:15 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -67,6 +67,10 @@ load_balance_mode = false
 # if there's a data mismatch between master and secondary
 # start degeneration to stop replication mode
 replication_stop_on_mismatch = false
+
+# If true, replicate SELECT statement when load balancing is disabled.
+# If false, it is only sended to the master node.
+replicate_select = false
 
 # Semicolon separated list of queries to be issued at the end of a session
 reset_query_list = 'ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT'
@@ -135,11 +139,9 @@ system_db_password = ''
 #backend_hostname0 = 'host1'
 #backend_port0 = 5432
 #backend_weight0 = 1
-#backend_data_directory0 = '/data'
 #backend_hostname1 = 'host2'
 #backend_port1 = 5433
 #backend_weight1 = 1
-#backend_data_directory1 = '/data1'
 
 # - HBA -
 
@@ -147,10 +149,3 @@ system_db_password = ''
 # 1.1, the default value is false. The default value will be true in
 # 1.2.
 enable_pool_hba = false
-
-# - online recovery -
-# online recovery user
-recovery_user = 'nobody'
-
-# online recovery password
-recovery_password = ''

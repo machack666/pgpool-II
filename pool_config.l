@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.4 2007/06/22 09:50:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.3.2.1 2007/07/23 06:54:15 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -145,6 +145,7 @@ int pool_get_config(char *confpath)
 	pool_config->replication_timeout = 0;
 	pool_config->load_balance_mode = 0;
 	pool_config->replication_stop_on_mismatch = 0;
+	pool_config.replicate_select = 0;
 	pool_config->reset_query_list = default_reset_query_list;
 	pool_config->num_reset_queries = sizeof(default_reset_query_list)/sizeof(char *);
 	pool_config->reset_query_list = default_reset_query_list;
@@ -530,6 +531,18 @@ int pool_get_config(char *confpath)
 			pool_debug("replication_stop_on_mismatch: %d", v);
 			pool_config->replication_stop_on_mismatch = v;
 		}
+		else if (!strcmp(key, "replicate_select"))
+		{
+			int v = eval_logical(yytext);
+
+			if (v < 0)
+			{
+				pool_error("pool_config: invalid value %s for %s", yytext, key);
+				return(-1);
+			}
+			pool_debug("replicate_select: %d", v);
+			pool_config->replicate_select = v;
+ 		}
 		else if (!strcmp(key, "reset_query_list"))
 		{
 			char *str;
@@ -643,44 +656,6 @@ int pool_get_config(char *confpath)
 				return(-1);
 			}
 			pool_config->health_check_user = str;
-		}
-
-		else if (!strcmp(key, "recovery_user"))
-		{
-			char *str;
-
-			if (token != POOL_STRING && token != POOL_UNQUOTED_STRING && token != POOL_KEY)
-			{
-				PARSE_ERROR();
-				fclose(fd);
-				return(-1);
-			}
-			str = extract_string(yytext, token);
-			if (str == NULL)
-			{
-				fclose(fd);
-				return(-1);
-			}
-			pool_config->recovery_user = str;
-		}
-
-		else if (!strcmp(key, "recovery_password"))
-		{
-			char *str;
-
-			if (token != POOL_STRING && token != POOL_UNQUOTED_STRING && token != POOL_KEY)
-			{
-				PARSE_ERROR();
-				fclose(fd);
-				return(-1);
-			}
-			str = extract_string(yytext, token);
-			if (str == NULL)
-			{
-				fclose(fd);
-				return(-1);
-			}
-			pool_config->recovery_password = str;
 		}
 
 		else if (!strcmp(key, "insert_lock"))
@@ -924,27 +899,6 @@ int pool_get_config(char *confpath)
 			}
 			pool_debug("pool_config: weight slot number %d weight: %f", slot, v);
 			pool_config->backend_desc->backend_info[slot].backend_weight = v;
-		}
-		else if (!strncmp(key, "backend_data_directory", 22))
-		{
-			int slot;
-			char *str;
-
-			slot = atoi(key + 22);
-			if (slot < 0 || slot >= MAX_CONNECTION_SLOTS)
-			{
-				pool_error("pool_config: backend number %s for backend_data_directory out of range", key);
-				fclose(fd);
-				return(-1);
-			}
-
-			str = extract_string(yytext, token);
-			if (str == NULL)
-			{
-				fclose(fd);
-				return(-1);
-			}
-			strncpy(BACKEND_INFO(slot).backend_data_directory, str, MAX_PATH_LENGTH);
 		}
        	else if (!strcmp(key, "log_statement"))
 		{
