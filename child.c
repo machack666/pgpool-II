@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.6 2007/06/22 09:50:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.5.2.1 2007/07/24 01:57:27 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -63,10 +63,10 @@ static POOL_CONNECTION_POOL *connect_backend(StartupPacket *sp, POOL_CONNECTION 
 static void cancel_request(CancelPacket *sp, int secondary_backend);
 static RETSIGTYPE die(int sig);
 static RETSIGTYPE close_idle_connection(int sig);
-static RETSIGTYPE wakeup_handler(int sig);
 static int send_params(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *backend);
 static void send_frontend_exits(void);
 static int s_do_auth(POOL_CONNECTION_POOL_SLOT *cp, char *password);
+static int select_load_balancing_node(void);
 
 /*
  * non 0 means SIGTERM(smart shutdown) or SIGINT(fast shutdown) has arrived
@@ -74,7 +74,6 @@ static int s_do_auth(POOL_CONNECTION_POOL_SLOT *cp, char *password);
 static int exit_request;
 
 static int idle;		/* non 0 means this child is in idle state */
-static int accepted = 0;
 
 extern int myargc;
 extern char **myargv;
@@ -111,7 +110,7 @@ void do_child(int unix_fd, int inet_fd)
 	signal(SIGQUIT, die);
 	signal(SIGCHLD, SIG_DFL);
 	signal(SIGUSR1, SIG_DFL);
-	signal(SIGUSR2, wakeup_handler);
+	signal(SIGUSR2, SIG_DFL);
 	signal(SIGPIPE, SIG_IGN);
 
 #ifdef NONE_BLOCK
@@ -174,7 +173,6 @@ void do_child(int unix_fd, int inet_fd)
 		}
 
 		idle = 1;
-		accepted = 0;
 
 		/* perform accept() */
 		frontend = do_accept(unix_fd, inet_fd, &timeout);
@@ -213,7 +211,6 @@ void do_child(int unix_fd, int inet_fd)
 		{
 			/* failed to read the startup packet. return to the accept() loop */
 			pool_close(frontend);
-			connection_count_down();
 			continue;
 		}
 
@@ -225,7 +222,6 @@ void do_child(int unix_fd, int inet_fd)
 				cancel_request((CancelPacket *)sp->startup_packet, 1);
 			pool_close(frontend);
 			pool_free_startup_packet(sp);
-			connection_count_down();
 			continue;
 		}
 
@@ -238,7 +234,6 @@ void do_child(int unix_fd, int inet_fd)
 			{
 				pool_close(frontend);
 				pool_free_startup_packet(sp);
-				connection_count_down();
 				continue;
 			}
 
@@ -323,10 +318,7 @@ void do_child(int unix_fd, int inet_fd)
 			connection_reuse = 0;
 
 			if ((backend = connect_backend(sp, frontend)) == NULL)
-			{
-				connection_count_down();
 				continue;
-			}
 
 			/* in master/slave mode, the first "ready for query"
 			 * packet should be treated as if we were not in the
@@ -360,7 +352,6 @@ void do_child(int unix_fd, int inet_fd)
 			if (pool_do_reauth(frontend, backend))
 			{
 				pool_close(frontend);
-				connection_count_down();
 				continue;
 			}
 
@@ -369,7 +360,6 @@ void do_child(int unix_fd, int inet_fd)
 				if (send_params(frontend, backend))
 				{
 					pool_close(frontend);
-					connection_count_down();
 					continue;
 				}
 			}
@@ -391,7 +381,6 @@ void do_child(int unix_fd, int inet_fd)
 			if (pool_flush(frontend) < 0)
 			{
 				pool_close(frontend);
-				connection_count_down();
 				continue;
 			}
 
@@ -409,8 +398,8 @@ void do_child(int unix_fd, int inet_fd)
 				 sp->user, sp->database, remote_ps_data);
 		set_ps_display(psbuf, false);
 
-		if (MAJOR(backend) == PROTO_MAJOR_V2)
-			TSTATE(backend) = 'I';
+		/* select load balancing node */
+		backend->info->load_balancing_node = select_load_balancing_node();
 
 		/* query process loop */
 		for (;;)
@@ -488,9 +477,6 @@ void do_child(int unix_fd, int inet_fd)
 			if (status != POOL_CONTINUE)
 				break;
 		}
-
-		accepted = 0;
-		connection_count_down();
 
 		timeout.tv_sec = pool_config->child_life_time;
 		timeout.tv_usec = 0;
@@ -676,21 +662,9 @@ static POOL_CONNECTION *do_accept(int unix_fd, int inet_fd, struct timeval *time
 #ifdef ACCEPT_PERFORMANCE
 	gettimeofday(&now1,0);
 #endif
-
- retry_accept:
-
-	/* wait if recovery is started */
-	while (*InRecovery == 1)
-	{
-		pause();
-	}
-
 	afd = accept(fd, (struct sockaddr *)&saddr.addr, &saddr.salen);
 	if (afd < 0)
 	{
-		if (errno == EINTR && *InRecovery)
-			goto retry_accept;
-
 		/*
 		 * "Resource temporarily unavailable" (EAGAIN or EWOULDBLOCK)
 		 * can be silently ignored.
@@ -708,9 +682,6 @@ static POOL_CONNECTION *do_accept(int unix_fd, int inet_fd, struct timeval *time
 		pool_log("cnt: %d atime: %ld", cnt, atime);
 	}
 #endif
-
-	connection_count_up();
-	accepted = 1;
 
 	if (pool_config->parallel_mode)
 	{
@@ -1249,9 +1220,6 @@ void pool_free_startup_packet(StartupPacket *sp)
 
 void child_exit(int code)
 {
-	if (accepted)
-		connection_count_down();
-
 	if(pool_config->parallel_mode || pool_config->enable_query_cache)
 	{
 		if (system_db_info->pgconn)
@@ -1647,24 +1615,40 @@ static int s_do_auth(POOL_CONNECTION_POOL_SLOT *cp, char *password)
 	return -1;
 }
 
-void connection_count_up(void)
-{
-	pool_semaphore_lock(CONN_COUNTER_SEM);
-	Req_info->conn_counter++;
-	pool_semaphore_unlock(CONN_COUNTER_SEM);
-}
 
-void connection_count_down(void)
-{
-	pool_semaphore_lock(CONN_COUNTER_SEM);
-	Req_info->conn_counter--;
-	pool_semaphore_unlock(CONN_COUNTER_SEM);
-}
-
-/* 
- * handle SIGUSR2
- * Wakeup all process
+/*
+ * Select load balancing node
  */
-static RETSIGTYPE wakeup_handler(int sig)
+static int select_load_balancing_node(void)
 {
+	double total_weight,r;
+	int i;
+
+	/* choose a backend in random manner with weight */
+	selected_slot = 0;
+	total_weight = 0.0;
+
+	for (i=0;i<NUM_BACKENDS;i++)
+	{
+		if (VALID_BACKEND(i))
+		{
+			total_weight += BACKEND_INFO(i).backend_weight;
+		}
+	}
+	r = (((double)random())/RAND_MAX) * total_weight;
+	total_weight = 0.0;
+	for (i=0;i<NUM_BACKENDS;i++)
+	{
+		if (VALID_BACKEND(i))
+		{
+			if(r >= total_weight)
+				selected_slot = i;
+			else
+				break;
+			total_weight += BACKEND_INFO(i).backend_weight;
+		}
+	}
+
+	pool_debug("select_load_balancing_node: selected backend id is %d", selected_slot);
+	return selected_slot;
 }
