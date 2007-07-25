@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.9 2007/07/25 11:39:31 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.10 2007/07/25 12:24:39 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4386,6 +4386,7 @@ static void add_unnamed_portal(PreparedStatementList *p, Portal *portal)
 			pfree(p_stmt->query);
 			pfree(p_stmt);
 		}
+		free(unnamed_statement);
 	}
 
 	unnamed_portal = NULL;
@@ -4424,6 +4425,7 @@ static void reset_prepared_list(PreparedStatementList *p)
 	{
 		pool_memory_delete(prepare_memory_context);
 		prepare_memory_context = NULL;
+		free(unnamed_statement);
 		unnamed_portal = NULL;
 		unnamed_statement = NULL;
 	}
