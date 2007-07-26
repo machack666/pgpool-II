@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.6.2.1 2007/07/26 05:11:30 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.6.2.2 2007/07/26 09:03:04 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -42,6 +42,7 @@
 #include "pool.h"
 
 POOL_CONNECTION_POOL *pool_connection_pool;	/* connection pool */
+volatile sig_atomic_t backend_timer_expired = 0; /* flag for connection closed timer is expired */
 
 static POOL_CONNECTION_POOL_SLOT *create_cp(POOL_CONNECTION_POOL_SLOT *cp, int slot);
 static POOL_CONNECTION_POOL *new_connection(POOL_CONNECTION_POOL *p);
@@ -304,6 +305,11 @@ void pool_connection_pool_timer(POOL_CONNECTION_POOL *backend)
  * backend connection close timer handler
  */
 RETSIGTYPE pool_backend_timer_handler(int sig)
+{
+	backend_timer_expired = 1;
+}
+
+void pool_backend_timer(void)
 {
 #define TMINTMAX 0x7fffffff
 

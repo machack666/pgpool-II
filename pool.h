@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.4 2007/07/24 08:41:32 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.5 2007/07/26 09:03:04 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -363,6 +363,7 @@ typedef struct {
  */
 extern POOL_CONFIG *pool_config;	/* configuration values */
 extern POOL_CONNECTION_POOL *pool_connection_pool;	/* connection pool */
+extern volatile sig_atomic_t backend_timer_expired; /* flag for connection closed timer is expired */
 extern long int weight_master;	/* normalized weight of master (0-RAND_MAX range) */
 extern int my_proc_id;  /* process table id (!= UNIX's PID) */
 extern POOL_SYSTEMDB_CONNECTION_POOL *system_db_info; /* systemdb */
@@ -406,6 +407,7 @@ extern int pool_init_cp(void);
 extern POOL_CONNECTION_POOL *pool_create_cp(void);
 extern POOL_CONNECTION_POOL *pool_get_cp(char *user, char *database, int protoMajor, int check_socket);
 extern void pool_discard_cp(char *user, char *database, int protoMajor);
+extern void pool_backend_timer(void);
 
 extern POOL_STATUS ErrorResponse(POOL_CONNECTION *frontend, 
 								  POOL_CONNECTION_POOL *backend);
