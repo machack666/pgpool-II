@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.10 2007/07/25 12:24:39 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.11 2007/07/26 07:30:12 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2616,6 +2616,11 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 	strncpy(status[i].name, "replication_stop_on_mismatch", MAXNAMELEN);
 	snprintf(status[i].value, MAXVALLEN, "%d", pool_config->replication_stop_on_mismatch);
 	strncpy(status[i].desc, "stop replication mode on fatal error", MAXDESCLEN);
+	i++;
+
+	strncpy(status[i].name, "replicate_select", MAXNAMELEN);
+	snprintf(status[i].value, MAXVALLEN, "%d", pool_config->replicate_select);
+	strncpy(status[i].desc, "non 0 if SELECT statement is replicated", MAXDESCLEN);
 	i++;
 
 	strncpy(status[i].name, "reset_query_list", MAXNAMELEN);
