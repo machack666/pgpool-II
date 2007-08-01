@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.11 2007/07/26 07:30:12 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.12 2007/08/01 04:03:11 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -928,7 +928,8 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 
 		if (IsA(node, PrepareStmt) || IsA(node, DeallocateStmt))
 		{
-			force_replication = 1;
+			if (REPLICATION)
+				force_replication = 1;
 			if (frontend)
 			{
 				POOL_MEMORY_POOL *old_context;
