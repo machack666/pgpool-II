@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.5.2.2 2007/07/26 09:03:04 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.5.2.3 2007/08/01 04:26:57 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -573,7 +573,7 @@ static POOL_CONNECTION *do_accept(int unix_fd, int inet_fd, struct timeval *time
 	static int cnt;
 #endif
 	struct timeval *timeoutval;
-	struct timeval tv1, tv2, tmback;
+	struct timeval tv1, tv2, tmback = {0, 0};
 
 	char remote_host[NI_MAXHOST];
 	char remote_port[NI_MAXSERV];
