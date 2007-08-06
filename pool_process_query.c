@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.36 2007/07/25 12:31:03 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.37 2007/08/06 01:42:19 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1133,6 +1133,7 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 	}
 	else
 	{
+		free_parser();
 		if (send_simplequery_message(MASTER(backend), len, string, MAJOR(backend)) != POOL_CONTINUE)
 			return POOL_END;
 
