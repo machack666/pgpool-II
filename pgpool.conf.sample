@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.4.2.1 2007/07/23 06:54:15 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.4.2.2 2007/08/12 21:37:58 t-ishii Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -69,7 +69,7 @@ load_balance_mode = false
 replication_stop_on_mismatch = false
 
 # If true, replicate SELECT statement when load balancing is disabled.
-# If false, it is only sended to the master node.
+# If false, it is only sent to the master node.
 replicate_select = false
 
 # Semicolon separated list of queries to be issued at the end of a session
