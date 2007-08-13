@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.6 2007/07/26 02:21:44 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.7 2007/08/13 02:23:19 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -143,6 +143,7 @@ int pool_init_config(void)
 	pool_config->replication_timeout = 0;
 	pool_config->load_balance_mode = 0;
 	pool_config->replication_stop_on_mismatch = 0;
+	pool_config->replicate_select = 0;
 	pool_config->reset_query_list = default_reset_query_list;
 	pool_config->num_reset_queries = sizeof(default_reset_query_list)/sizeof(char *);
 	pool_config->reset_query_list = default_reset_query_list;

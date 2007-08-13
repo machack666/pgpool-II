@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.5 2007/06/22 09:50:51 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.6 2007/08/13 02:23:19 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -67,6 +67,10 @@ load_balance_mode = false
 # if there's a data mismatch between master and secondary
 # start degeneration to stop replication mode
 replication_stop_on_mismatch = false
+
+# If true, replicate SELECT statement when load balancing is disabled.
+# If false, it is only sent to the master node.
+replicate_select = false
 
 # Semicolon separated list of queries to be issued at the end of a session
 reset_query_list = 'ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT'
