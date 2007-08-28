@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.39 2007/08/28 02:28:20 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.40 2007/08/28 10:07:15 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1432,6 +1432,7 @@ static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 	char *name, *stmt;
 	List *parse_tree_list;
 	Node *node = NULL;
+	int deadlock_detected = 0;
 
 	/* read Parse packet */
 	if (pool_read(frontend, &len, sizeof(len)) < 0)
@@ -1511,20 +1512,45 @@ static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 				return POOL_END;
 		}
 
+		/*
+		 * We must check deadlock error because a aborted transaction
+		 * by detecting deadlock isn't same on all nodes.
+		 * If a transaction is aborted on master node, pgpool send a
+		 * error query to another nodes.
+		 */
+		deadlock_detected = detect_deadlock_error(MASTER(backend), MAJOR(backend));
+		if (deadlock_detected < 0)
+			return POOL_END;
+
 		for (i=0;i<NUM_BACKENDS;i++)
 		{
 			if (VALID_BACKEND(i) && !IS_MASTER_NODE_ID(i))
 			{
-				if (send_extended_protocol_message(backend, i,
-												   "P", len, string))
-					return POOL_END;
-
-				if (pool_config->replication_strict)
+				if (deadlock_detected)
 				{
-					pool_debug("waiting for master completing the query");
-					if (synchronize(CONNECTION(backend, i)))
+					if (send_simplequery_message(CONNECTION(backend, i),
+												 strlen(POOL_ERROR_QUERY)+1,
+												 POOL_ERROR_QUERY,
+												 MAJOR(backend)))
 						return POOL_END;
 				}
+				else if (send_extended_protocol_message(backend, i,
+														"P", len, string))
+					return POOL_END;
+			}
+		}
+
+		/* wait for nodes excepted for master node */
+		for (i=0;i<NUM_BACKENDS;i++)
+		{
+			if (!VALID_BACKEND(i) || IS_MASTER_NODE_ID(i))
+				continue;
+
+			if (pool_config->replication_strict)
+			{
+				pool_debug("waiting for backend completing the query");
+				if (synchronize(CONNECTION(backend, i)))
+					return POOL_END;
 			}
 		}
 	}
