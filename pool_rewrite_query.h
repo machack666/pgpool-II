@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_rewrite_query.h,v 1.2.4.2 2007/07/27 12:09:28 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_rewrite_query.h,v 1.2.4.3 2007/08/29 10:03:05 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -70,9 +70,21 @@ typedef struct {
 	char **col_list;		/* column list */
 	char **type_list;		/* type list */
 	char **table_list;		/* table list */
+	char *state_list;
 	int *valid;
 	int col_num;	
 } VirtualTable;
+
+typedef struct {
+	char **col_list;		/* column list */
+	char **type_list;		/* type list */
+	char **table_list;		/* table list */
+	char state;
+	int *valid;
+	int col_num;
+	char **using_list;	
+	int using_length;
+} JoinTable;
 
 typedef struct {
   int now_select;
@@ -81,10 +93,12 @@ typedef struct {
   int from_num;
   char state;
   char *table_name;
+	char partstate[8];
 	bool select_union;
 	RangeInfo **range;
 	int rangeinfo_num;
 	VirtualTable *virtual;
+	JoinTable *join;
 	SelectDefInfo *select_ret;
 } AnalyzeSelect;
 
@@ -117,7 +131,7 @@ typedef struct {
 	char *password;
 } ConInfoTodblink;
 
-extern RewriteQuery *rewrite_query_stmt(Node *node, POOL_CONNECTION *frontend,POOL_CONNECTION_POOL *backend);
+extern RewriteQuery *rewrite_query_stmt(Node *node, POOL_CONNECTION *frontend,POOL_CONNECTION_POOL *backend,RewriteQuery *message);
 extern void nodeToRewriteString(RewriteQuery *message, ConInfoTodblink *dblink,void *obj);
 char *pool_error_message(char *message);
 extern int IsSelectpgcatalog(Node *node,POOL_CONNECTION_POOL *backend);

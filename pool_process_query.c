@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.31.2.3 2007/07/27 12:09:28 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.31.2.4 2007/08/29 10:03:05 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -883,9 +883,9 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 			}
 			else if(!r_query->is_pg_catalog)
 			{
+				//r_query = rewrite_query_stmt(node,frontend,backend,r_query);
 				/* rewrite query phase */
-				/* NOW　TEST
-				r_query = rewrite_query_stmt(node,frontend,backend);
+				/* NOW TEST
 				if(r_query->type == T_InsertStmt && r_query->r_code != INSERT_DIST_NO_RULE)
 				{
 					free_parser();

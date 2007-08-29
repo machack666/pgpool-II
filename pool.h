@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.8 2007/07/10 09:56:07 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.8.2.1 2007/08/29 10:03:05 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -491,6 +491,7 @@ extern POOL_CONNECTION_POOL_SLOT *make_persistent_db_connection(
 /* define pool_system.c */
 extern POOL_CONNECTION_POOL_SLOT *pool_system_db_connection(void);
 extern DistDefInfo *pool_get_dist_def_info (char * dbname, char * schema_name, char * table_name);
+extern RepliDefInfo *pool_get_repli_def_info (char * dbname, char * schema_name, char * table_name);
 extern int pool_get_id (DistDefInfo *info, const char * value);
 extern int system_db_connect (void);
 extern int pool_memset_system_db_info (SystemDBInfo *info);
