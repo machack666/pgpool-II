@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.40 2007/08/28 10:07:15 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.41 2007/08/29 06:01:17 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1423,6 +1423,7 @@ static POOL_STATUS send_execute_message(POOL_CONNECTION_POOL *backend,
 static POOL_STATUS Parse(POOL_CONNECTION *frontend, 
 						 POOL_CONNECTION_POOL *backend)
 {
+	char kind;
 	int len;
 	char *string;
 	int i;
@@ -1553,6 +1554,22 @@ static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 					return POOL_END;
 			}
 		}
+	}
+
+	for (;;)
+	{
+		kind = pool_read_kind(backend);
+		if (kind < 0)
+		{
+			pool_error("Parse: pool_read_kind error");
+			return POOL_ERROR;
+		}
+		SimpleForwardToFrontend(kind, frontend, backend);
+		if (pool_flush(frontend) < 0)
+			return POOL_ERROR;
+
+		if (kind != 'N')
+			break;
 	}
 	return POOL_CONTINUE;
 }
