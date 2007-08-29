@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/recovery.c,v 1.1 2007/06/22 09:50:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/recovery.c,v 1.2 2007/08/29 06:48:22 y-asaba Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -237,15 +237,16 @@ static int check_postmaster_started(BackendInfo *backend)
 static PGconn *connect_backend_libpq(BackendInfo *backend)
 {
 	char port_str[10];
+	PGconn *conn;
 
 	sprintf(port_str, "%d", backend->backend_port);
-	PGconn *conn = PQsetdbLogin(backend->backend_hostname,
-								port_str,
-								NULL,
-								NULL,
-								"template1",
-								pool_config->recovery_user,
-								pool_config->recovery_password);
+	conn = PQsetdbLogin(backend->backend_hostname,
+						port_str,
+						NULL,
+						NULL,
+						"template1",
+						pool_config->recovery_user,
+						pool_config->recovery_password);
 
 	if (PQstatus(conn) != CONNECTION_OK)
 	{
