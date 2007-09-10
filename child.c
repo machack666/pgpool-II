@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.11 2007/08/01 04:27:42 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.12 2007/09/10 12:47:48 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1106,7 +1106,7 @@ static POOL_CONNECTION_POOL *connect_backend(StartupPacket *sp, POOL_CONNECTION 
 	if (backend == NULL)
 	{
 		pool_send_error_message(frontend, sp->major, "XX000", "connection cache is full", "",
-								"increace max_pool", __FILE__, __LINE__);
+								"increase max_pool", __FILE__, __LINE__);
 		pool_close(frontend);
 		pool_free_startup_packet(sp);
 		return NULL;
