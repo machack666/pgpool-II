@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.12 2007/09/10 12:47:48 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.13 2007/09/10 13:25:15 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -52,11 +52,6 @@
 #include "pool.h"
 #include "pool_ip.h"
 #include "md5.h"
-
-#ifdef NONE_BLOCK
-static void set_nonblock(int fd);
-static void unset_nonblock(int fd);
-#endif
 
 void child_exit(int code);
 
@@ -123,10 +118,10 @@ void do_child(int unix_fd, int inet_fd)
 
 #ifdef NONE_BLOCK
 	/* set listen fds to none block */
-	set_nonblock(unix_fd);
+	pool_set_nonblock(unix_fd);
 	if (inet_fd)
 	{
-		set_nonblock(inet_fd);
+		pool_set_nonblock(inet_fd);
 	}
 #endif
 
@@ -200,11 +195,7 @@ void do_child(int unix_fd, int inet_fd)
 		}
 
 		/* set frontend fd to blocking */
-		unset_nonblock(frontend->fd);
-
-#ifdef NOT_USED
-		set_nonblock(frontend->fd);
-#endif
+		pool_unset_nonblock(frontend->fd);
 
 		/* set busy flag and clear child idle timer */
 		idle = 0;
@@ -533,11 +524,10 @@ void do_child(int unix_fd, int inet_fd)
  * -------------------------------------------------------------------
  */
 
-#ifdef NONE_BLOCK
 /*
  * set non-block flag
  */
-static void set_nonblock(int fd)
+void pool_set_nonblock(int fd)
 {
 	int var;
 
@@ -554,12 +544,11 @@ static void set_nonblock(int fd)
 		child_exit(1);
 	}
 }
-#endif
 
 /*
  * unset non-block flag
  */
-static void unset_nonblock(int fd)
+void pool_unset_nonblock(int fd)
 {
 	int var;
 

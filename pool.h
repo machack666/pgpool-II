@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.12 2007/08/13 02:23:19 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.13 2007/09/10 13:25:15 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -539,5 +539,9 @@ extern const char *get_ps_display(int *displen);
 /* recovery.c */
 extern int start_recovery(int recovery_node);
 extern void finish_recovery(void);
+
+/* child.c */
+extern void pool_set_nonblock(int fd);
+extern void pool_unset_nonblock(int fd);
 
 #endif /* POOL_H */
