@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.6 2007/08/13 02:23:19 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.7 2007/09/14 13:36:20 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -92,6 +92,12 @@ health_check_period = 0
 
 # Health check user
 health_check_user = 'nobody'
+
+# failover command
+failover_command = ''
+
+# failback_command
+failback_command = ''
 
 # If true, automatically lock table with INSERT statements to keep SERIAL
 # data consistency.  An /*INSERT LOCK*/ comment has the same effect.  A

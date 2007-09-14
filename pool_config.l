@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.7 2007/08/13 02:23:19 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.8 2007/09/14 13:36:20 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -153,6 +153,7 @@ int pool_init_config(void)
 	pool_config->health_check_timeout = 20;
 	pool_config->health_check_period = 0;
 	pool_config->health_check_user = "nobody";
+    pool_config->failover_command = "";
 	pool_config->insert_lock = 0;
 	pool_config->ignore_leading_white_space = 0;
 	pool_config->parallel_mode = 0;
@@ -664,6 +665,46 @@ int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context)
 				return(-1);
 			}
 			pool_config->health_check_user = str;
+		}
+
+		else if (!strcmp(key, "failover_command") &&
+				 CHECK_CONTEXT(INIT_CONFIG|RELOAD_CONFIG, context))
+		{
+			char *str;
+
+			if (token != POOL_STRING && token != POOL_UNQUOTED_STRING && token != POOL_KEY)
+			{
+				PARSE_ERROR();
+				fclose(fd);
+				return(-1);
+			}
+			str = extract_string(yytext, token);
+			if (str == NULL)
+			{
+				fclose(fd);
+				return(-1);
+			}
+			pool_config->failover_command = str;
+		}
+
+		else if (!strcmp(key, "failback_command") &&
+				 CHECK_CONTEXT(INIT_CONFIG|RELOAD_CONFIG, context))
+		{
+			char *str;
+
+			if (token != POOL_STRING && token != POOL_UNQUOTED_STRING && token != POOL_KEY)
+			{
+				PARSE_ERROR();
+				fclose(fd);
+				return(-1);
+			}
+			str = extract_string(yytext, token);
+			if (str == NULL)
+			{
+				fclose(fd);
+				return(-1);
+			}
+			pool_config->failback_command = str;
 		}
 
 		else if (!strcmp(key, "recovery_user") &&

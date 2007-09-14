@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.44 2007/09/14 11:11:54 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.45 2007/09/14 13:36:20 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3048,6 +3048,16 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 	strncpy(status[i].name, "health_check_user", MAXNAMELEN);
 	snprintf(status[i].value, MAXVALLEN, "%s", pool_config->health_check_user);
 	strncpy(status[i].desc, "health check user", MAXDESCLEN);
+	i++;
+
+	strncpy(status[i].name, "failover_command", MAXNAMELEN);
+	snprintf(status[i].value, MAXVALLEN, "%s", pool_config->failover_command);
+	strncpy(status[i].desc, "failover command", MAXDESCLEN);
+	i++;
+
+	strncpy(status[i].name, "failback_command", MAXNAMELEN);
+	snprintf(status[i].value, MAXVALLEN, "%s", pool_config->failover_command);
+	strncpy(status[i].desc, "failback command", MAXDESCLEN);
 	i++;
 
 	strncpy(status[i].name, "insert_lock", MAXNAMELEN);
