@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.13 2007/09/10 13:25:15 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.14 2007/09/14 11:11:54 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -402,6 +402,7 @@ extern int pool_init_config(void);
 extern int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context);
 extern void do_child(int unix_fd, int inet_fd);
 extern void pcp_do_child(int unix_fd, int inet_fd, char *pcp_conf_file);
+extern int select_load_balancing_node(void);
 extern int pool_init_cp(void);
 extern POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 									  POOL_CONNECTION_POOL *backend,

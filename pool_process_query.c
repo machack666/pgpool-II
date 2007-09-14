@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.43 2007/09/10 13:29:47 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.44 2007/09/14 11:11:54 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -298,6 +298,12 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 
 			num_fds = 0;
 
+			if (!VALID_BACKEND(backend->info->load_balancing_node))
+			{
+				/* select load balancing node */
+				backend->info->load_balancing_node = select_load_balancing_node();
+			}
+
 			for (i=0;i<NUM_BACKENDS;i++)
 			{
 				if (VALID_BACKEND(i))
@@ -337,6 +343,8 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 					if (detect_postmaster_down_error(CONNECTION(backend, i), MAJOR(backend)))
 					{
 						was_error = 1;
+						if (!VALID_BACKEND(i))
+							break;
 						notice_backend_error(i);
 						sleep(5);
 						break;
@@ -364,6 +372,8 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 
 					continue;
 				}
+				if (kind == 0)
+					continue;
 			}
 			
 			if (FD_ISSET(MASTER(backend)->fd, &exceptmask))
