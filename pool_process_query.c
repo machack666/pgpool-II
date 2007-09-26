@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.47 2007/09/26 08:56:01 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.48 2007/09/26 09:09:10 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1262,7 +1262,6 @@ static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 		if ((IsA(node, PrepareStmt) || IsA(node, DeallocateStmt) || IsA(node, VariableSetStmt)) &&
 			MASTER_SLAVE)
 		{
-			pool_debug("HHHH");
 			force_replication = 1;
 		}
 
