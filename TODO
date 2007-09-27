@@ -1,4 +1,4 @@
-$Header: /cvsroot/pgpool/pgpool-II/TODO,v 1.5 2007/08/17 01:50:46 t-ishii Exp $
+$Header: /cvsroot/pgpool/pgpool-II/TODO,v 1.6 2007/09/27 02:48:10 y-asaba Exp $
 
 TODO項目
 
@@ -32,10 +32,6 @@ o DROP DATABASEのロジックを変更．今はparentにSIGUSR1を送ってすべての
   タベースへのコネクションを切断すれば十分．
 
 * レプリケーション
-o node間で戻ってきたパケット種別が一致しないときに，多数決でどれをエラー
-  にするか決める．2007/4/15現在のCVS HEADでは常にマスタを正とし，それ
-  と一致しないものを見付次第切り離している．
-
 o もしSQLをパースできれば，テーブル単位のレプリケーションも可能？
 
 o セッションレベルのロードバランスを指示できる機能を追加
