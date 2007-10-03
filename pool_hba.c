@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_hba.c,v 1.1 2007/05/23 01:59:28 yamaguti Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_hba.c,v 1.2 2007/10/03 04:25:46 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -33,6 +33,7 @@
 #include "pool.h"
 #include "pool_path.h"
 #include "pool_ip.h"
+#include "parser/pool_memory.h"
 #include "parser/pg_list.h"
 
 #define MULTI_VALUE_SEP "\001" /* delimiter for multi-valued column strings */
