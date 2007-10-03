@@ -1,6 +1,4 @@
-$Header: /cvsroot/pgpool/pgpool-II/test/parser/README,v 1.1 2007/10/03 04:47:18 y-asaba Exp $
-
-パーサと SQL 生成処理を単体テストするためのプログラムを作成します。
+$Header: /cvsroot/pgpool/pgpool-II/test/parser/README,v 1.2 2007/10/03 04:52:26 y-asaba Exp $
 
 1. Parser test program
 

@@ -1,10 +1,10 @@
 #! /usr/bin/env ruby
 
-# $Header: /cvsroot/pgpool/pgpool-II/test/parser/run-test,v 1.1 2007/10/03 04:47:19 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/test/parser/run-test,v 1.2 2007/10/03 04:52:26 y-asaba Exp $
 
 #
-# 使い方：./run-test schedule
-#         schedule ファイルは # で始まる場合はその行を無視する
+# Usage：./run-test schedule
+#         ignore a line at the beginning of '#'
 #
 
 INPUT_DIRECTORY="input"
