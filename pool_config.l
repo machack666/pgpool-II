@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.8 2007/09/14 13:36:20 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.9 2007/10/03 04:17:55 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -155,7 +155,7 @@ int pool_init_config(void)
 	pool_config->health_check_user = "nobody";
     pool_config->failover_command = "";
 	pool_config->insert_lock = 0;
-	pool_config->ignore_leading_white_space = 0;
+	pool_config->ignore_leading_white_space = 1;
 	pool_config->parallel_mode = 0;
 	pool_config->enable_query_cache = 0;
 	pool_config->system_db_hostname = "localhost";

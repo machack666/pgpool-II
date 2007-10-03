@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.8 2007/09/16 02:08:20 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.9 2007/10/03 04:17:55 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -120,7 +120,7 @@ insert_lock = false
 # whether the query is a SELECT so that it can be load balanced.  This
 # is useful for certain APIs such as DBI/DBD which is known to adding an
 # extra leading white space.
-ignore_leading_white_space = false
+ignore_leading_white_space = true
 
 # If true, print all statements to the log.  Like the log_statement option
 # to PostgreSQL, this allows for observing queries without engaging in full
