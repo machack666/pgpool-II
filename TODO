@@ -1,4 +1,4 @@
-$Header: /cvsroot/pgpool/pgpool-II/TODO,v 1.7 2007/10/03 06:19:39 y-asaba Exp $
+$Header: /cvsroot/pgpool/pgpool-II/TODO,v 1.8 2007/10/11 01:49:12 y-asaba Exp $
 
 TODO項目
 
@@ -37,6 +37,8 @@ o バグ．master/slave mode&load balance modeのときに，reset queryがマス
   うがない？->slave側にはSELECT以外は投げられないため
 
 o OIDをreplicationする
+
+o graceful shutdown, attach, detach の実装
 
 
 * クエリキャッシュ
