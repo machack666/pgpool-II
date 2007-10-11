@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.16 2007/09/26 05:29:47 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.17 2007/10/11 08:34:59 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -82,6 +82,15 @@ typedef enum {
 /* protocol major version numbers */
 #define PROTO_MAJOR_V2	2
 #define PROTO_MAJOR_V3	3
+
+/*
+ * In protocol 3.0 and later, the startup packet length is not fixed, but
+ * we set an arbitrary limit on it anyway.	This is just to prevent simple
+ * denial-of-service attacks via sending enough data to run the server
+ * out of memory.
+ */
+#define MAX_STARTUP_PACKET_LENGTH 10000
+
 
 typedef struct StartupPacket_v2
 {

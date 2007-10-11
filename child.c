@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.14 2007/09/14 11:11:54 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.15 2007/10/11 08:34:59 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -921,6 +921,12 @@ static StartupPacket *read_startup_packet(POOL_CONNECTION *cp)
 	if (len <= 0)
 	{
 		pool_error("read_startup_packet: incorrect packet length (%d)", len);
+	}
+	else if (len >= MAX_STARTUP_PACKET_LENGTH)
+	{
+		pool_error("read_startup_packet: invalid startup packet");
+		pool_free_startup_packet(sp);
+		return NULL;
 	}
 
 	sp->startup_packet = calloc(len, 1);
