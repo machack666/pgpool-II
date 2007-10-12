@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.9 2007/10/03 04:17:55 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.10 2007/10/12 04:34:13 t-ishii Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -42,6 +42,11 @@ connection_life_time = 0
 # If child_max_connections connections were received, child exits.
 # 0 means no exit.
 child_max_connections = 0
+
+# If child_idle_limit is n (n > 0), the child is forced to be
+# disconnected after n seconds idle between transactions.
+# 0 means no disconnect.
+child_idle_limit = 0
 
 # Logging directory
 logdir = '/tmp'
