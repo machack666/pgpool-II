@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.17 2007/09/26 05:29:47 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.18 2007/10/12 05:55:03 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1106,11 +1106,11 @@ static void failover(void)
 	 */
 	pool_debug("failover_handler: starting to selec new master node");
 	switching = 1;
+	node_id = Req_info->node_id[0];
 
 	/* failback request? */
 	if (Req_info->kind == NODE_UP_REQUEST)
 	{
-		node_id = Req_info->node_id[0];
 		if (node_id >= MAX_NUM_BACKENDS ||
 			(Req_info->kind == NODE_UP_REQUEST && VALID_BACKEND(node_id)) ||
 			(Req_info->kind == NODE_DOWN_REQUEST && !VALID_BACKEND(node_id)))
@@ -1143,7 +1143,7 @@ static void failover(void)
 
 
 				BACKEND_INFO(Req_info->node_id[i]).backend_status = CON_DOWN;	/* set down status */
-				trigger_failover_command(node_id, pool_config->failover_command);
+				trigger_failover_command(Req_info->node_id[i], pool_config->failover_command);
 				cnt++;
 			}
 		}
