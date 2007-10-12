@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.10 2007/10/12 04:34:13 t-ishii Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.11 2007/10/12 09:16:56 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -47,6 +47,10 @@ child_max_connections = 0
 # disconnected after n seconds idle between transactions.
 # 0 means no disconnect.
 child_idle_limit = 0
+
+# Maximum time in seconds to complete client authentication.
+# 0 means no timeout.
+authentication_timeout = 60
 
 # Logging directory
 logdir = '/tmp'
