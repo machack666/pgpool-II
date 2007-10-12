@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.6 2007/07/09 01:29:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.7 2007/10/12 04:35:31 y-asaba Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -742,26 +742,37 @@ pcp_do_child(int unix_fd, int inet_fd, char *pcp_conf_file)
 				char code[] = "CommandComplete";
 				int r;
 
-				pool_debug("pcp_child: start online recovery");				
-				node_id = atoi(buf);
-
-				r = start_recovery(node_id);
-				finish_recovery();
-
-				if (r == 0) /* success */
+				if (!REPLICATION)
 				{
-					pcp_write(frontend, "c", 1);
-					wsize = htonl(sizeof(code) + sizeof(int));
-					pcp_write(frontend, &wsize, sizeof(int));
-					pcp_write(frontend, code, sizeof(code));
-				}
-				else
-				{
-					int len = strlen("recovery failed") + 1;
+					int len = strlen("recovery request is accepted only in replication mode. ") + 1;
 					pcp_write(frontend, "e", 1);
 					wsize = htonl(sizeof(int) + len);
 					pcp_write(frontend, &wsize, sizeof(int));
-					pcp_write(frontend, "recovery failed", len);
+					pcp_write(frontend, "recovery request is accepted only in replication mode. ", len);
+				}
+				else
+				{
+					pool_debug("pcp_child: start online recovery");				
+					node_id = atoi(buf);
+
+					r = start_recovery(node_id);
+					finish_recovery();
+
+					if (r == 0) /* success */
+					{
+						pcp_write(frontend, "c", 1);
+						wsize = htonl(sizeof(code) + sizeof(int));
+						pcp_write(frontend, &wsize, sizeof(int));
+						pcp_write(frontend, code, sizeof(code));
+					}
+					else
+					{
+						int len = strlen("recovery failed") + 1;
+						pcp_write(frontend, "e", 1);
+						wsize = htonl(sizeof(int) + len);
+						pcp_write(frontend, &wsize, sizeof(int));
+						pcp_write(frontend, "recovery failed", len);
+					}
 				}
 				if (pcp_flush(frontend) < 0)
 				{
