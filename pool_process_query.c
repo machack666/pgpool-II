@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.16 2007/09/26 04:23:39 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.17 2007/10/12 04:32:14 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2768,6 +2768,11 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 	strncpy(status[i].name, "max_pool", MAXNAMELEN);
 	snprintf(status[i].value, MAXVALLEN, "%d", pool_config->max_pool);
 	strncpy(status[i].desc, "max # of connection pool per child", MAXDESCLEN);
+	i++;
+
+	strncpy(status[i].name, "authentication_timeout", MAXNAMELEN);
+	snprintf(status[i].value, MAXVALLEN, "%d", pool_config->authentication_timeout);
+	strncpy(status[i].desc, "maximum time in seconds to complete client authentication", MAXNAMELEN);
 	i++;
 
 	strncpy(status[i].name, "logdir", MAXNAMELEN);

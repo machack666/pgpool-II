@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.7 2007/10/11 08:32:15 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.5.2.8 2007/10/12 04:32:14 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -127,6 +127,7 @@ typedef struct {
     int	child_life_time;	/* if idle for this seconds, child exits */
     int	connection_life_time;	/* if idle for this seconds, connection closes */
     int	child_max_connections;	/* if max_connections received, child exits */
+	int authentication_timeout; /* maximum time in seconds to complete client authentication */
     int	max_pool;	/* max # of connection pool per child */
     char *logdir;		/* logging directory */
     char *backend_socket_dir;	/* Unix domain socket directory for the PostgreSQL server */
