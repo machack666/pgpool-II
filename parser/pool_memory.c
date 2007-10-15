@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.7 2007/09/07 09:08:16 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/parser/pool_memory.c,v 1.8 2007/10/15 06:11:13 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -280,6 +280,7 @@ void pool_memory_delete(POOL_MEMORY_POOL *pool_memory, int reuse)
 
 		if (pool_memory->blocks)
 		{
+			pool_memory->blocks->next = NULL;
 			pool_memory->blocks->allocsize = 0;
 			pool_memory->blocks->freepoint = pool_memory->blocks->block;
 		}
