@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.59 2007/10/15 12:56:21 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.60 2007/10/16 03:44:02 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4205,6 +4205,7 @@ static void start_load_balance(POOL_CONNECTION_POOL *backend)
 	backend->slots[0] = slots[selected_slot];
 #endif
 	LOAD_BALANCE_STATUS(backend->info->load_balancing_node) = LOAD_SELECTED;
+	selected_slot = backend->info->load_balancing_node;
 
 	/* start load balancing */
 	in_load_balance = 1;
