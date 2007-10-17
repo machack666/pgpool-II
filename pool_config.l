@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.3.2.3 2007/10/12 04:32:14 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.3.2.4 2007/10/17 04:13:26 devrim Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -960,7 +960,7 @@ int pool_get_config(char *confpath)
 	pool_debug("num_backends: %d num_backends: %d total_weight: %f",
 			   pool_config->backend_desc->num_backends, pool_config->backend_desc->num_backends, total_weight);
 	/*
-	 * Normalize load balacing weights. What we are doing here is,
+	 * Normalize load balancing weights. What we are doing here is,
 	 * assign 0 to RAND_MAX to each backend's weight according to the
 	 * value weightN.  For example, if two backends are assigned 1.0,
 	 * then each backend will get RAND_MAX/2 normalized weight.
@@ -1079,7 +1079,7 @@ static int eval_logical(char *str)
 }
 
 /*
- * extract tokens separated by delimi from str. return value is an
+ * extract tokens separated by delimiter from str. return value is an
  * array of pointers to malloced strings. number of tokens is set to
  * n; note that str will be destroyed by strtok(). Also return value
  * points to static data, that means subsequent call will change the
