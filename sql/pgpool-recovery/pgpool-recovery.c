@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.1 2007/06/22 09:50:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.2 2007/10/23 07:32:20 y-asaba Exp $
  *
  * pgpool-recovery: exec online recovery script from SELECT statement.
  *
@@ -58,7 +58,7 @@ pgpool_recovery(PG_FUNCTION_ARGS)
 
 	if (r != 0)
 	{
-		elog(ERROR, "pgpool_recovery: rsync failed");
+		elog(ERROR, "pgpool_recovery failed");
 	}
 
 	PG_RETURN_BOOL(true);
