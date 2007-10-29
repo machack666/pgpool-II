@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.12 2007/10/18 01:21:33 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.13 2007/10/29 01:20:17 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -130,7 +130,7 @@ int pool_init_config(void)
 	pool_config->num_init_children = 32;
 	pool_config->max_pool = 4;
 	pool_config->child_life_time = 300;
-	pool_config->child_idle_limit = 0;
+	pool_config->client_idle_limit = 0;
 	pool_config->connection_life_time = 0;
 	pool_config->child_max_connections = 0;
 	pool_config->authentication_timeout = 60;
@@ -367,7 +367,7 @@ int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context)
 			}
 			pool_config->child_life_time = v;
 		}
-		else if (!strcmp(key, "child_idle_limit") &&
+		else if (!strcmp(key, "client_idle_limit") &&
 				 CHECK_CONTEXT(INIT_CONFIG|RELOAD_CONFIG, context))
 		{
 			int v = atoi(yytext);
@@ -378,7 +378,7 @@ int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context)
 				fclose(fd);
 				return(-1);
 			}
-			pool_config->child_idle_limit = v;
+			pool_config->client_idle_limit = v;
 		}
 		else if (!strcmp(key, "connection_life_time") &&
 				 CHECK_CONTEXT(INIT_CONFIG|RELOAD_CONFIG, context))
