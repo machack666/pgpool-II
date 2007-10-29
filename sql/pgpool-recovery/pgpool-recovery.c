@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.2 2007/10/23 07:32:20 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.3 2007/10/29 04:37:24 y-asaba Exp $
  *
  * pgpool-recovery: exec online recovery script from SELECT statement.
  *
@@ -24,7 +24,6 @@
 #include "executor/spi.h"
 #include "funcapi.h"
 
-#define RECOVERY_FILE "pgpool_recovery"
 #define REMOTE_START_FILE "pgpool_remote_start"
 
 #include <stdlib.h>
@@ -45,13 +44,16 @@ Datum
 pgpool_recovery(PG_FUNCTION_ARGS)
 {
 	int r;
+	char *script = DatumGetCString(DirectFunctionCall1(textout,
+													   PointerGetDatum(PG_GETARG_TEXT_P(0))));
+													   
 	char *remote_host = DatumGetCString(DirectFunctionCall1(textout,
-															PointerGetDatum(PG_GETARG_TEXT_P(0))));
+															PointerGetDatum(PG_GETARG_TEXT_P(1))));
 	char *remote_data_directory = DatumGetCString(DirectFunctionCall1(textout,
-																	  PointerGetDatum(PG_GETARG_TEXT_P(1))));
+																	  PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
 	sprintf(recovery_script, "%s/%s %s %s %s",
-			DataDir, RECOVERY_FILE, DataDir, remote_host,
+			DataDir, script, DataDir, remote_host,
 			remote_data_directory);
 	elog(DEBUG1, "recovery_script: %s", recovery_script);
 	r = system(recovery_script);
