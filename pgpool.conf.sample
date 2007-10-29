@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.13 2007/10/29 01:20:17 t-ishii Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.14 2007/10/29 05:50:11 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -186,3 +186,9 @@ recovery_user = 'nobody'
 
 # online recovery password
 recovery_password = ''
+
+# execute a command in first stage.
+recovery_1st_stage_command = ''
+
+# execute a command in second stage.
+recovery_2nd_stage_command = ''
