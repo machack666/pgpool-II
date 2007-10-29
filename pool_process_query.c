@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.65 2007/10/29 01:20:17 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.66 2007/10/29 04:16:29 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -568,7 +568,6 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 /* using only in pool_parallel_exec */
 #define BITS (8 * sizeof(long int))
 
-/* using only in pool_parallel_exec */
 static void set_fd(unsigned long fd ,fd_set *setp)
 {
 	unsigned long tmp = fd / 1024;
