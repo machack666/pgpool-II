@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.3 2007/01/04 17:27:10 devrim Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.4 2007/10/30 01:53:39 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -35,6 +35,8 @@
 #endif
 #include <errno.h>
 #include <string.h>
+
+#define AUTHFAIL_ERRORCODE "28000"
 
 static POOL_STATUS pool_send_auth_ok(POOL_CONNECTION *frontend, int pid, int key, int protoMajor);
 static int do_clear_text_password(POOL_CONNECTION *backend, POOL_CONNECTION *frontend, int reauth, int protoMajor);
@@ -170,6 +172,16 @@ int pool_do_auth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp)
 	/* md5 authentication? */
 	else if (pid == 5)
 	{
+		if (NUM_BACKENDS > 1)
+		{
+			pool_send_error_message(frontend, 3, AUTHFAIL_ERRORCODE,
+									"MD5 authentication is unsupported in replication, master-slave and parallel modes.",
+									"",
+									"check pg_hba.conf",
+									__FILE__, __LINE__);
+			return -1;
+		}
+
 		for (i=0;i<NUM_BACKENDS;i++)
 		{
 			pool_debug("trying md5 authentication");
