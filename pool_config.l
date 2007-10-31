@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.14 2007/10/29 05:50:11 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.15 2007/10/31 04:15:03 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -334,7 +334,8 @@ int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context)
 			}
 			pool_config->pcp_socket_dir = str;
 		}
-		else if (!strcmp(key, "pcp_timeout") && CHECK_CONTEXT(INIT_CONFIG, context))
+		else if (!strcmp(key, "pcp_timeout") &&
+			 CHECK_CONTEXT(INIT_CONFIG|RELOAD_CONFIG, context))
 		{
 			int v = atoi(yytext);
 
