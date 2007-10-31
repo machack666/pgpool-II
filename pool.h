@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.23 2007/10/29 05:50:11 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.24 2007/10/31 10:45:52 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -56,12 +56,6 @@
 
 /* pid file name */
 #define PID_FILE_NAME "pgpool.pid"
-
-/* strict mode comment in SQL */
-#define STRICT_MODE_STR "/*STRICT*/"
-#define STRICT_MODE(s) (strncasecmp((s), STRICT_MODE_STR, strlen(STRICT_MODE_STR)) == 0)
-#define NO_STRICT_MODE_STR "/*NO STRICT*/"
-#define NO_STRICT_MODE(s) (strncasecmp((s), NO_STRICT_MODE_STR, strlen(NO_STRICT_MODE_STR)) == 0)
 
 typedef enum {
 	POOL_CONTINUE = 0,
