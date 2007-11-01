@@ -1,5 +1,5 @@
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp_proc_count.c,v 1.1 2006/09/08 03:36:50 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp_proc_count.c,v 1.2 2007/11/01 08:17:12 y-asaba Exp $
  *
  * Client program to send "process count" command.
  */
@@ -79,7 +79,7 @@ main(int argc, char **argv)
 		myexit(errorcode);
 	}
 
-	if ((process_list = pcp_process_count(&process_count)) < 0)
+	if ((process_list = pcp_process_count(&process_count)) == NULL)
 	{
 		pcp_errorstr(errorcode);
 		pcp_disconnect();
