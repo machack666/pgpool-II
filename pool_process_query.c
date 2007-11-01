@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.69 2007/10/31 10:45:52 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.70 2007/11/01 10:11:25 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3016,7 +3016,7 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 	int len;
 	short colnum;
 
-	static char nullmap[2] = {0xff, 0xff};
+	static unsigned char nullmap[2] = {0xff, 0xff};
 	int nbytes = (num_fields + 7)/8;
 
 #define POOLCONFIG_MAXNAMELEN 32
