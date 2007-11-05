@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.23 2007/10/26 07:27:31 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.24 2007/11/05 01:35:00 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4225,6 +4225,13 @@ static int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query, Node *no
 {
 	if (MAJOR(backend) != PROTO_MAJOR_V3)
 		return 0;
+
+	if (pool_config->ignore_leading_white_space)
+	{
+		/* ignore leading white spaces */
+		while (*query && isspace(*query))
+			query++;
+	}
 	
 	/*
 	 * either insert_lock directive specified and without "NO INSERT LOCK" comment
