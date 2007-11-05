@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.71 2007/11/02 09:20:46 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.72 2007/11/05 01:41:22 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4555,6 +4555,13 @@ POOL_STATUS OneNode_do_command(POOL_CONNECTION *frontend, POOL_CONNECTION *backe
  */
 static int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query, Node *node)
 {
+	if (pool_config->ignore_leading_white_space)
+	{
+		/* ignore leading white spaces */
+		while (*query && isspace(*query))
+			query++;
+	}
+
 	/*
 	 * either insert_lock directive specified and without "NO INSERT LOCK" comment
 	 * or "INSERT LOCK" comment exists?
