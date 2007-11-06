@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.28 2007/11/06 04:38:42 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.23.2.29 2007/11/06 07:22:49 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1444,13 +1444,13 @@ static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 					return POOL_END;
 				if (ReadyForQuery(frontend, backend, 0) != POOL_CONTINUE)
 					return POOL_END;
+			}
 
-				/* start a transaction if needed and lock the table */
-				status = insert_lock(backend, stmt, (InsertStmt *)p_stmt->query);
-				if (status != POOL_CONTINUE)
-				{
-					return status;
-				}
+			/* start a transaction if needed and lock the table */
+			status = insert_lock(backend, stmt, (InsertStmt *)p_stmt->query);
+			if (status != POOL_CONTINUE)
+			{
+				return status;
 			}
 		}
 		free_parser();
