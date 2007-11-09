@@ -1,4 +1,4 @@
--- $Header: /cvsroot/pgpool/pgpool-II/sql/system_db.sql,v 1.1 2006/09/08 03:36:17 t-ishii Exp $
+-- $Header: /cvsroot/pgpool/pgpool-II/sql/system_db.sql,v 1.2 2007/11/09 04:56:00 y-mori Exp $
 
 DROP TABLE pgpool_catalog.dist_def;
 DROP TABLE pgpool_catalog.query_cache;
@@ -15,6 +15,15 @@ CREATE TABLE pgpool_catalog.dist_def(
 	col_list TEXT[] NOT NULL,
 	type_list TEXT[] NOT NULL,
 	dist_def_func TEXT NOT NULL,
+	PRIMARY KEY (dbname,schema_name,table_name)
+);
+
+CREATE TABLE pgpool_catalog.replicate_def(
+	dbname TEXT,
+	schema_name TEXT,
+	table_name TEXT,
+	col_list TEXT[] NOT NULL,
+	type_list TEXT[] NOT NULL,
 	PRIMARY KEY (dbname,schema_name,table_name)
 );
 
