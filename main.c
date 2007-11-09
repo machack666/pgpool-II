@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.19 2007/10/17 10:23:43 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.20 2007/11/09 04:37:35 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -586,6 +586,7 @@ static void usage(void)
 	fprintf(stderr, "  a generic connection pool/replication/load balance server for PostgreSQL\n\n");
 	fprintf(stderr, "usage: pgpool [-c][-f config_file][-F pcp_config_file][-a hba_file][-n][-d]\n");
 	fprintf(stderr, "usage: pgpool [-f config_file][-F pcp_config_file][-a hba_file] [-m {s[mart]|f[ast]|i[mmediate]}] stop\n");
+	fprintf(stderr, "usage: pgpool [-f config_file][-F pcp_config_file][-a hba_file] reload\n");
 	fprintf(stderr, "usage: pgpool -h\n");
 	fprintf(stderr, "  config_file default path: %s/%s\n",DEFAULT_CONFIGDIR, POOL_CONF_FILE_NAME);
 	fprintf(stderr, "  pcp_config_file default path: %s/%s\n", DEFAULT_CONFIGDIR, PCP_PASSWD_FILE_NAME);
