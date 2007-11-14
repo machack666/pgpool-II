@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.76 2007/11/14 03:59:58 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.77 2007/11/14 07:46:04 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4129,7 +4129,7 @@ static int reset_backend(POOL_CONNECTION_POOL *backend, int qcnt)
 static int load_balance_enabled(POOL_CONNECTION_POOL *backend, Node* node, char *sql)
 {
 	return (pool_config->load_balance_mode &&
-			DUAL_MODE &&
+			(DUAL_MODE || pool_config->parallel_mode) &&
 			MAJOR(backend) == PROTO_MAJOR_V3 &&
 			TSTATE(backend) == 'I' &&
 			is_select_query(node, sql) &&
