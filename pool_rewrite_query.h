@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_rewrite_query.h,v 1.4 2007/10/29 04:16:30 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_rewrite_query.h,v 1.5 2007/11/15 00:39:56 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -121,6 +121,7 @@ typedef struct {
 	bool select_union;
 	bool select_range;
 	bool aggregate;
+	bool retlock;
 	Aggexpr *aggexpr;
 	RangeInfo **range;
 	int rangeinfo_num;
