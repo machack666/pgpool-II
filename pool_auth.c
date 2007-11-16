@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.3 2007/01/04 17:27:10 devrim Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.3.2.1 2007/11/16 02:55:23 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -138,6 +138,9 @@ int pool_do_auth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp)
 	{
 		for (i=0;i<NUM_BACKENDS;i++)
 		{
+			if (!VALID_BACKEND(i))
+				continue;
+
 			pool_debug("trying clear text password authentication");
 
 			pid = do_clear_text_password(CONNECTION(cp, i), frontend, 0, protoMajor);
@@ -155,6 +158,9 @@ int pool_do_auth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp)
 	{
 		for (i=0;i<NUM_BACKENDS;i++)
 		{
+			if (!VALID_BACKEND(i))
+				continue;
+
 			pool_debug("trying crypt authentication");
 
 			pid = do_crypt(CONNECTION(cp, i), frontend, 0, protoMajor);
@@ -172,6 +178,9 @@ int pool_do_auth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp)
 	{
 		for (i=0;i<NUM_BACKENDS;i++)
 		{
+			if (!VALID_BACKEND(i))
+				continue;
+
 			pool_debug("trying md5 authentication");
 
 			pid = do_md5(CONNECTION(cp, i), frontend, 0, protoMajor);
