@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.78 2007/11/21 01:47:58 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.79 2007/11/21 09:37:39 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -926,7 +926,8 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 	{
 		node = (Node *) lfirst(list_head(parse_tree_list));
 
-		is_parallel_table = is_partition_table(backend,node);
+		if (PARALLEL_MODE)
+			is_parallel_table = is_partition_table(backend,node);
 
 		if (pool_config->enable_query_cache &&
 			SYSDB_STATUS == CON_UP &&
