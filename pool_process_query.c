@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.77 2007/11/14 07:46:04 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.78 2007/11/21 01:47:58 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1186,6 +1186,16 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 			free_parser();
 			return POOL_ERROR;
 		}
+	}
+	else
+	{  /* syntax error */
+		if (MASTER_SLAVE)
+		{
+			pool_debug("SimpleQuery: set master_slave_dml query: %s", string);
+			master_slave_was_enabled = 1;
+			MASTER_SLAVE = 0;
+			master_slave_dml = 1;
+		}		
 	}
 
 	if (MAJOR(backend) == PROTO_MAJOR_V2 && is_start_transaction_query(node))
