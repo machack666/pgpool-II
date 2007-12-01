@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.80 2007/12/01 13:26:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.81 2007/12/01 14:50:57 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3642,6 +3642,13 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 			pool_memory = old_context;
 			free(pending_prepared_portal);
 		}
+	}
+	else if (kind == 'E' && pending_function)
+	{
+		/* PREPARE or DEALLOCATE is error.
+		 * Free pending portal object.
+		 */
+		free(pending_prepared_portal);
 	}
 	else if (kind == 'C' && select_in_transaction)
 		select_in_transaction = 0;
