@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.81 2007/12/01 14:50:57 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.82 2007/12/02 02:45:20 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3979,16 +3979,42 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 		}
 	}
 
+	/* Close message with prepared statement name. */
 	else if (kind == 'C' && *p == 'S' && *(p + 1))
 	{
-		name = strdup(p+1);
+		POOL_MEMORY_POOL *old_context = pool_memory;
+		DeallocateStmt *deallocate_stmt;
+
+		pool_memory = prepare_memory_context;
+		name = pstrdup(p+1);
 		if (name == NULL)
 		{
 			pool_error("SimpleForwardToBackend: malloc failed: %s", strerror(errno));
+			pool_memory = old_context;
 			return POOL_END;
 		}
+
+		/* Translate from Close message to DEALLOCATE statement.*/
+		deallocate_stmt = palloc(sizeof(DeallocateStmt));
+		if (deallocate_stmt == NULL)
+		{
+			pool_error("SimpleForwardToBackend: malloc failed: %s", strerror(errno));
+			pool_memory = old_context;
+			return POOL_END;
+		}
+		deallocate_stmt->name = name;
+
+		pending_prepared_portal = malloc(sizeof(Portal));
+		if (pending_prepared_portal == NULL)
+		{
+			pool_error("SimpleForwardToBackend: malloc failed: %s", strerror(errno));
+			pool_memory = old_context;
+			return POOL_END;
+		}
+		pending_prepared_portal->stmt = (Node *)deallocate_stmt;
+		pending_prepared_portal->portal_name = NULL;
 		pending_function = del_prepared_list;
-		pending_prepared_portal = NULL;
+		pool_memory = old_context;
 	}
 
 	if (kind == 'B' || kind == 'D' || kind == 'C')
