@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.82 2007/12/02 02:45:20 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.83 2007/12/03 01:47:44 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4477,7 +4477,7 @@ retry_read_packet:
 		return POOL_END;
 	}
 
-	if (kind != 'C')
+	if (kind == 'E')
 	{
 		pool_log("do_command: backend does not successfully complete command %s status %c", query, kind);
 	}
