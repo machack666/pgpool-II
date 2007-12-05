@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.2.2.1 2007/07/11 02:15:30 y-asaba Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.2.2.2 2007/12/05 08:19:41 y-asaba Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -309,8 +309,6 @@ char *pool_read2(POOL_CONNECTION *cp, int len)
 */
 int pool_write(POOL_CONNECTION *cp, void *buf, int len)
 {
-	int reqlen;
-
 	if (len < 0)
 	{
 		pool_error("pool_write: invalid request size: %d", len);
@@ -320,26 +318,31 @@ int pool_write(POOL_CONNECTION *cp, void *buf, int len)
 	if (cp->no_forward)
 		return 0;
 
-	/* check buffer size */
-	reqlen = cp->wbufpo + len;
-
-	if (reqlen > cp->wbufsz)
+	while (len > 0)
 	{
-		char *p;
+		int remainder = cp->wbufsz - cp->wbufpo;
 
-		reqlen = (reqlen/WRITEBUFSZ+1)*WRITEBUFSZ;
-		p = realloc(cp->wbuf, reqlen);
-		if (p == NULL)
+		if (remainder <= 0)
 		{
-			pool_error("pool_write: realloc failed");
-			return -1;
+			/*
+			 * Write buffer is full. so flush buffer.
+			 * wbufpo is reset in pool_flush_it().
+			 */
+			pool_flush_it(cp);
+			remainder = WRITEBUFSZ;
 		}
-		cp->wbuf = p;
-		cp->wbufsz = reqlen;
-	}
 
-	memcpy(cp->wbuf+cp->wbufpo, buf, len);
-	cp->wbufpo += len;
+		/* check buffer size */
+		if (remainder >= len)
+		{
+			/* OK, buffer size is enough. */
+			remainder = len;
+		}
+		memcpy(cp->wbuf+cp->wbufpo, buf, remainder);
+		cp->wbufpo += remainder;
+		buf += remainder;
+		len -= remainder;
+	}
 
 	return 0;
 }
