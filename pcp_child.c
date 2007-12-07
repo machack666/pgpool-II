@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.7 2007/10/12 04:35:31 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.8 2007/12/07 05:08:36 y-asaba Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -966,7 +966,7 @@ user_authenticate(char *buf, char *passwd_file, char *salt, int salt_len)
 
 	/* strcpy() should be OK, but use strncpy() to be extra careful */
 	strncpy(packet_username, buf, MAX_USER_PASSWD_LEN);
-	index = memchr(buf, '\0', MAX_USER_PASSWD_LEN) + 1;
+	index = (char *) memchr(buf, '\0', MAX_USER_PASSWD_LEN) + 1;
 	if (index == NULL)
 	{
 		pool_debug("pcp_child: error while reading authentication packet");

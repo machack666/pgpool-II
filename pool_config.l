@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.17 2007/11/23 00:14:10 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.18 2007/12/07 05:08:36 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -28,6 +28,7 @@
 #include "pool.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define CHECK_CONTEXT(mask, context) ((mask) & (context))

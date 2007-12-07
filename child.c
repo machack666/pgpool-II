@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.16 2007/10/12 04:51:22 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.17 2007/12/07 05:08:35 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -47,6 +47,10 @@
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
+#endif
+
+#ifdef HAVE_CRYPT_H
+#include <crypt.h>
 #endif
 
 #include "pool.h"
