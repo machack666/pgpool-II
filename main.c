@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.20 2007/11/09 04:37:35 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.21 2007/12/11 03:59:23 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -467,11 +467,11 @@ int main(int argc, char **argv)
 
 			if (retrycnt == 0)
 			{
-				pool_log("starting health checking");
+				pool_debug("starting health checking");
 			}
 			else
 			{
-				pool_log("retrying %d th health checking", retrycnt);
+				pool_debug("retrying %d th health checking", retrycnt);
 			}
 
 			if (pool_config->health_check_timeout > 0)
