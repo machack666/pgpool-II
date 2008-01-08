@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.23 2008/01/02 08:32:03 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.24 2008/01/08 04:31:53 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1069,6 +1069,7 @@ static RETSIGTYPE failover_handler(int sig)
  */
 static void failover(void)
 {
+	int i;
 	int node_id;
 	int new_master;
 
