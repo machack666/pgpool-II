@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.85 2008/01/11 02:30:19 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.86 2008/01/11 03:11:04 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -61,10 +61,11 @@
 
 #define POOL_ERROR_QUERY "send invalid query from pgpool to abort transaction"
 
+/* Prepared statement information */
 typedef struct {
-	char *portal_name;
-	Node *stmt;
-	POOL_MEMORY_POOL *prepare_ctxt;
+	char *portal_name; /* portal name*/
+	Node *stmt;        /* parse tree for prepared statement */
+	POOL_MEMORY_POOL *prepare_ctxt; /* memory context for parse tree */
 } Portal;
 
 /*
