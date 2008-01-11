@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.24 2008/01/08 04:31:53 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.25 2008/01/11 02:30:19 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1706,7 +1706,7 @@ static int trigger_failover_command(int node, const char *command_line)
 		return -1;
 
 	buf[1] = '\0';
-	pool_memory = pool_memory_create();
+	pool_memory = pool_memory_create(PREPARE_BLOCK_SIZE);
 	if (!pool_memory)
 	{
 		pool_error("trigger_failover_command: pool_memory_create() failed");

@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_hba.c,v 1.2 2007/10/03 04:25:46 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_hba.c,v 1.3 2008/01/11 02:30:19 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -102,7 +102,7 @@ void load_hba(char *hbapath)
 	POOL_MEMORY_POOL *old_context;
 	if (hba_memory_context == NULL)
 	{
-		hba_memory_context = pool_memory_create();
+		hba_memory_context = pool_memory_create(PARSER_BLOCK_SIZE);
 		if (hba_memory_context == NULL)
 		{
 			pool_error("load_hba: pool_memory_create() failed");
