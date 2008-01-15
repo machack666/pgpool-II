@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.86 2008/01/11 03:11:04 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.87 2008/01/15 02:10:06 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3638,8 +3638,6 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 			pending_prepared_portal->stmt &&
 			IsA(pending_prepared_portal->stmt, DeallocateStmt))
 		{
-			DeallocateStmt *s = (DeallocateStmt *)pending_prepared_portal->stmt;
-
 			free(pending_prepared_portal->portal_name);
 			pool_memory_delete(pending_prepared_portal->prepare_ctxt, 0);
 			free(pending_prepared_portal);
