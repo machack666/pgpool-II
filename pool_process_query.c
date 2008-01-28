@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.89 2008/01/25 07:20:00 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.90 2008/01/28 02:26:44 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2934,8 +2934,8 @@ static POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 
 	if (pool_read(frontend, &fkind, 1) < 0)
 	{
-		pool_error("ProcessFrontendResponse: failed to read kind from frontend. fronend abnormally exited");
-		return POOL_ERROR;
+		pool_log("ProcessFrontendResponse: failed to read kind from frontend. fronend abnormally exited");
+		return POOL_END;
 	}
 
 	pool_debug("read kind from frontend %c(%02x)", fkind, fkind);
