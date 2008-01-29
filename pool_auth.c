@@ -1,11 +1,11 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.7 2007/11/16 02:52:51 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.8 2008/01/29 01:56:36 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
  *
- * Copyright (c) 2003-2007	PgPool Global Development Group
+ * Copyright (c) 2003-2008	PgPool Global Development Group
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby

@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_ip.c,v 1.1 2007/05/23 01:59:28 yamaguti Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_ip.c,v 1.2 2008/01/29 01:56:36 y-asaba Exp $
  *
  * This file was imported from PostgreSQL 8.0.8 source code.
  * See below for the copyright and description.
@@ -9,7 +9,7 @@
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
  *
- * Portions Copyright (c) 2003-2007	PgPool Global Development Group
+ * Portions Copyright (c) 2003-2008	PgPool Global Development Group
  * Portions Copyright (c) 1996-2005, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
