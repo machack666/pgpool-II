@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.9 2008/02/05 09:57:43 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.10 2008/02/05 10:05:08 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1042,7 +1042,7 @@ int *pool_read_message_length2(POOL_CONNECTION_POOL *cp)
 		}
 
 	}
-	return &length_array[MASTER_NODE_ID];
+	return &length_array[0];
 }
 
 signed char pool_read_kind(POOL_CONNECTION_POOL *cp)
