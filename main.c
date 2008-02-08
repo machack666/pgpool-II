@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.26 2008/01/29 01:56:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.27 2008/02/08 06:47:43 yamaguti Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1610,6 +1610,10 @@ static void kill_all_children(int sig)
 			kill(pid, sig);
 		}
 	}
+
+	/* make PCP process reload as well */
+	if (sig == SIGHUP)
+		kill(pcp_pid, sig);
 }
 
 /*
