@@ -1,5 +1,5 @@
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp.c,v 1.6 2008/01/29 01:56:37 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp/pcp.c,v 1.7 2008/02/08 08:10:43 yamaguti Exp $
  *
  * Handles PCP connection, and protocol communication with pgpool-II
  * These are client APIs. Server program should use APIs in pcp_stream.c
@@ -1317,6 +1317,8 @@ pcp_attach_node(int nid)
 void
 pcp_set_timeout(long sec)
 {
+	/* disable timeout (wait forever!) (2008/02/08 yamaguti) */
+	sec = 0;
 	pcp_timeout.tv_sec = sec;
 }
 
