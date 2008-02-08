@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.8 2008/01/29 01:56:36 y-asaba Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.9 2008/02/08 10:57:03 y-asaba Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -335,7 +335,7 @@ char *pool_read2(POOL_CONNECTION *cp, int len)
 	buf += consume_size;
 
 	/* if this is not the master backend, then set timeout */
-	notimeout = IS_MASTER_NODE_ID(cp->db_node_id);
+	notimeout = !IS_MASTER_NODE_ID(cp->db_node_id);
 
 	while (len > 0)
 	{
@@ -655,7 +655,7 @@ char *pool_read_string(POOL_CONNECTION *cp, int *len, int line)
 	}
 
 	/* if this is not the master backend, then set timeout */
-	notimeout = IS_MASTER_NODE_ID(cp->db_node_id);
+	notimeout = !IS_MASTER_NODE_ID(cp->db_node_id);
 
 	for (;;)
 	{
