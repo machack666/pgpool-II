@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.18 2008/01/29 01:56:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.19 2008/02/12 11:16:09 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -212,9 +212,6 @@ void do_child(int unix_fd, int inet_fd)
 			backend_timer_expired = 0;
 		}
 
-		/* disable timeout */
-		pool_disable_timeout();
-
 		/* read the startup packet */
 	retry_startup:
 		sp = read_startup_packet(frontend);
@@ -405,10 +402,6 @@ void do_child(int unix_fd, int inet_fd)
 			}
 
 		}
-
-		/* enable query result read timeout if non strict mode */
-		if (pool_config->replication_strict == 0)
-			pool_enable_timeout();
 
 		connected = 1;
 
