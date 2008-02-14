@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.10 2008/01/29 01:56:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.11 2008/02/14 05:05:55 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -555,8 +555,7 @@ static POOL_CONNECTION_POOL *new_connection(POOL_CONNECTION_POOL *p)
 	{
 		pool_debug("new_connection: connecting %d backend", i);
 
-		if (BACKEND_INFO(i).backend_status == CON_DOWN ||
-			BACKEND_INFO(i).backend_status == CON_UNUSED)
+		if (!VALID_BACKEND(i))
 		{
 			pool_debug("new_connection: skipping slot %d because backend_status = %d",
 					   i, BACKEND_INFO(i).backend_status);
