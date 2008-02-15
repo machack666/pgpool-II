@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.29 2008/02/14 05:48:54 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.30 2008/02/15 04:04:58 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1214,7 +1214,7 @@ static void failover(void)
 			return;
 		}
 
-		pool_log("failover_handler: set new master node: %d", i);
+		pool_log("failover_handler: set new master node: %d", new_master);
 		Req_info->master_node_id = new_master;
 	}
 
