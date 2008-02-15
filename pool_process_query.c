@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.93 2008/02/12 11:16:10 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.94 2008/02/15 06:19:51 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1065,7 +1065,8 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 			return POOL_CONTINUE;
 		}
 
-		if (IsA(node, PrepareStmt) || IsA(node, DeallocateStmt) || IsA(node, VariableSetStmt))
+		if (IsA(node, PrepareStmt) || IsA(node, DeallocateStmt) ||
+			IsA(node, VariableSetStmt) || IsA(node, DiscardStmt))
 		{
 			/*
 			 * PREPARE, DEALLOCATE and SET statements must be replicated.
