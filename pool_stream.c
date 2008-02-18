@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.10 2008/02/12 11:16:10 y-asaba Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.11 2008/02/18 09:58:39 y-asaba Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -410,15 +410,16 @@ int pool_write(POOL_CONNECTION *cp, void *buf, int len)
 
 	while (len > 0)
 	{
-		int remainder = cp->wbufsz - cp->wbufpo;
+		int remainder = WRITEBUFSZ - cp->wbufpo;
 
-		if (remainder <= 0)
+		if (cp->wbufpo >= WRITEBUFSZ)
 		{
 			/*
 			 * Write buffer is full. so flush buffer.
 			 * wbufpo is reset in pool_flush_it().
 			 */
-			pool_flush_it(cp);
+			if (pool_flush_it(cp) == -1)
+				return -1;
 			remainder = WRITEBUFSZ;
 		}
 
