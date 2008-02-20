@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.96 2008/02/19 05:46:41 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.97 2008/02/20 10:12:41 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4169,26 +4169,34 @@ static int load_balance_enabled(POOL_CONNECTION_POOL *backend, Node* node, char 
 
 /*
  * return non 0 if SQL is SELECT statement.
+ * COPY TO STDOUT is OK too.
  */
 static int is_select_query(Node *node, char *sql)
 {
-	SelectStmt *select_stmt;
-
-	if (node == NULL || !IsA(node, SelectStmt))
+	if (node == NULL)
 		return 0;
 
-	select_stmt = (SelectStmt *)node;
-	if (select_stmt->intoClause || select_stmt->lockingClause)
-		return 0;
-
-	if (pool_config->ignore_leading_white_space)
+	if (IsA(node, SelectStmt))
 	{
-		/* ignore leading white spaces */
-		while (*sql && isspace(*sql))
-			sql++;
-	}
+		SelectStmt *select_stmt = (SelectStmt *)node;
+		if (select_stmt->intoClause || select_stmt->lockingClause)
+			return 0;
 
-	return (*sql == 's' || *sql == 'S' || *sql == '(');
+		if (pool_config->ignore_leading_white_space)
+		{
+			/* ignore leading white spaces */
+			while (*sql && isspace(*sql))
+				sql++;
+		}
+		return (*sql == 's' || *sql == 'S' || *sql == '(');
+	}
+	else if (IsA(node, CopyStmt))
+	{
+		CopyStmt *copy_stmt = (CopyStmt *)node;
+		return (copy_stmt->is_from == FALSE &&
+				copy_stmt->filename == NULL);
+	}
+	return 0;
 }
 
 /*
