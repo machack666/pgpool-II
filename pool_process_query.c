@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.98 2008/02/25 02:58:59 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.99 2008/03/03 03:39:39 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -653,6 +653,7 @@ POOL_STATUS pool_parallel_exec(POOL_CONNECTION *frontend,
 	{
 		pool_debug("process reporting");
 		process_reporting(frontend, backend);
+		in_progress = 0;
 		return POOL_CONTINUE;
 	}
 
@@ -1055,6 +1056,7 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 
 			pool_debug("process reporting");
 			process_reporting(frontend, backend);
+			in_progress = 0;
 
 			/* show ps status */
 			sp = MASTER_CONNECTION(backend)->sp;
