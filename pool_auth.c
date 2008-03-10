@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.10 2008/02/05 10:05:08 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.11 2008/03/10 15:08:16 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -951,7 +951,7 @@ int pool_read_message_length(POOL_CONNECTION_POOL *cp)
 	status = pool_read(CONNECTION(cp, MASTER_NODE_ID), &length0, sizeof(length0));
 	if (status < 0)
 	{
-		pool_error("pool_read_message_length: error while reading message length in slot %d", i);
+		pool_error("pool_read_message_length: error while reading message length in slot %d", MASTER_NODE_ID);
 		return -1;
 	}
 	length0 = ntohl(length0);
