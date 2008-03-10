@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.99 2008/03/03 03:39:39 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.100 2008/03/10 04:37:19 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -314,6 +314,8 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 			FD_ZERO(&writemask);
 			FD_ZERO(&exceptmask);
 
+			num_fds = 0;
+
 			/*
 			 * Do not read a message from frontend while backends process a query.
 			 */
@@ -323,8 +325,6 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 				FD_SET(frontend->fd, &exceptmask);
 				num_fds = Max(frontend->fd + 1, num_fds);
 			}
-
-			num_fds = 0;
 
 			/*
 			 * Do not use VALID_BACKEND macro.
@@ -345,10 +345,6 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 					FD_SET(CONNECTION(backend, i)->fd, &exceptmask);
 				}
 			}
-
-			/*
-			pool_debug("pool_process_query: num_fds: %d", num_fds);
-			*/
 
 			if (pool_config->client_idle_limit == 0)
 				fds = select(num_fds, &readmask, &writemask, &exceptmask, NULL);
