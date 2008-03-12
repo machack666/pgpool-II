@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.11 2008/03/10 15:08:16 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.12 2008/03/12 03:54:55 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -84,9 +84,14 @@ int pool_do_auth(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *cp)
 	}
 
 	/*
-	 * message length (v3 only) */
+	 * message length (v3 only)
+	 */
 	if (protoMajor == PROTO_MAJOR_V3 && pool_read_message_length(cp) < 0)
 	{
+		pool_error("Failed to read the authentication packet length. \
+This is likely caused by the inconsistency of auth method among DB nodes. \
+In this case you can check the previous error messages (hint: length field) \
+from pool_read_message_length and recheck the pg_hba.conf settings.");
 		return -1;
 	}
 
