@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.19 2008/02/12 11:16:09 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.20 2008/03/12 09:31:30 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -414,8 +414,11 @@ void do_child(int unix_fd, int inet_fd)
 		if (MAJOR(backend) == PROTO_MAJOR_V2)
 			TSTATE(backend) = 'I';
 
-		/* select load balancing node */
-		backend->info->load_balancing_node = select_load_balancing_node();
+		if (pool_config->load_balance_mode)
+		{
+			/* select load balancing node */
+			backend->info->load_balancing_node = select_load_balancing_node();
+		}
 
 		/* query process loop */
 		for (;;)
