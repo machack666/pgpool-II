@@ -489,7 +489,7 @@ char *yytext;
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.c,v 1.23 2008/02/12 11:16:09 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.c,v 1.24 2008/03/12 09:32:59 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
