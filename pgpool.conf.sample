@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.18 2008/02/12 11:16:09 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.19 2008/03/12 09:33:26 t-ishii Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -59,8 +59,8 @@ logdir = '/tmp'
 # Replication mode
 replication_mode = false
 
-# Load balancing mode, i.e., all SELECTs except in a transaction block
-# are load balanced.  This is ignored if replication_mode is false.
+# Load balancing mode, i.e., all SELECTs are load balanced.
+# This is ignored if replication_mode is false.
 load_balance_mode = false
 
 # if there's a data mismatch between master and secondary
