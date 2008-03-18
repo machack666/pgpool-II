@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.20 2008/03/14 02:00:18 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.21 2008/03/18 08:39:02 y-asaba Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -187,4 +187,4 @@ recovery_1st_stage_command = ''
 recovery_2nd_stage_command = ''
 
 # maximum time in seconds to wait for remote start-up. 0 means no wait
-recovery_timeout = 90;
+recovery_timeout = 90
