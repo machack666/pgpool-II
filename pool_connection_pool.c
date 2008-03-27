@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.11 2008/02/14 05:05:55 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.12 2008/03/27 16:01:40 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -120,9 +120,17 @@ POOL_CONNECTION_POOL *pool_get_cp(char *user, char *database, int protoMajor, in
 					if (!VALID_BACKEND(j))
 						continue;
 
-					sock_broken = check_socket_status(CONNECTION(p, j)->fd);
-					if (sock_broken < 0)
+					if  (CONNECTION_SLOT(p, j))
+					{
+						sock_broken = check_socket_status(CONNECTION(p, j)->fd);
+						if (sock_broken < 0)
+							break;
+					}
+					else
+					{
+						sock_broken = -1;
 						break;
+					}
 				}
 
 				if (sock_broken < 0)
@@ -130,7 +138,7 @@ POOL_CONNECTION_POOL *pool_get_cp(char *user, char *database, int protoMajor, in
 					pool_log("connection closed. retry to create new connection pool.");
 					for (j=0;j<NUM_BACKENDS;j++)
 					{
-						if (!VALID_BACKEND(j))
+						if (!VALID_BACKEND(j) || (CONNECTION_SLOT(p, j) == NULL))
 							continue;
 
 						if (!freed)
@@ -146,9 +154,11 @@ POOL_CONNECTION_POOL *pool_get_cp(char *user, char *database, int protoMajor, in
 					memset(p, 0, sizeof(POOL_CONNECTION_POOL_SLOT));
 					p->info = info;
 					memset(p->info, 0, sizeof(ConnectionInfo));
+					POOL_SETMASK(&oldmask);
 					return NULL;
 				}
 			}
+			POOL_SETMASK(&oldmask);
 			return p;
 		}
 		p++;
