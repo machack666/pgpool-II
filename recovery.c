@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/recovery.c,v 1.10 2008/02/25 11:22:28 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/recovery.c,v 1.11 2008/03/27 16:04:01 y-asaba Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -43,6 +43,8 @@ static int wait_connection_closed(void);
 static int check_postmaster_started(BackendInfo *backend);
 
 static char recovery_command[1024];
+
+extern volatile sig_atomic_t pcp_wakeup_request;
 
 int start_recovery(int recovery_node)
 {
@@ -133,7 +135,15 @@ int start_recovery(int recovery_node)
 	pool_log("%d node restarted", recovery_node);
 
 	send_failback_request(recovery_node);
-	pause(); /* wait for failback */
+
+	/* wait for failback */
+	while (!pcp_wakeup_request)
+	{
+		struct timeval t = {1, 0};
+		/* polling SIGUSR2 signal per 1 sec */
+		select(0, NULL, NULL, NULL, &t);
+	}
+	pcp_wakeup_request = 0;
 
 	PQfinish(conn);
 

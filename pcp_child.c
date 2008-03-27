@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.10 2008/02/08 06:47:43 yamaguti Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pcp_child.c,v 1.11 2008/03/27 16:04:01 y-asaba Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -71,7 +71,8 @@ static RETSIGTYPE reload_config_handler(int sig);
 extern int myargc;
 extern char **myargv;
 
-volatile sig_atomic_t pcp_got_sighup = 0;
+static volatile sig_atomic_t pcp_got_sighup = 0;
+volatile sig_atomic_t pcp_wakeup_request = 0;
 
 void
 pcp_do_child(int unix_fd, int inet_fd, char *pcp_conf_file)
@@ -835,7 +836,7 @@ die(int sig)
 static RETSIGTYPE
 wakeup_handler(int sig)
 {
-
+	pcp_wakeup_request = 1;
 }
 
 static PCP_CONNECTION *
