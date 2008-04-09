@@ -1,4 +1,4 @@
--- $Header: /cvsroot/pgpool/pgpool-II/sample/replicate_def_pgbench.sql,v 1.1 2007/11/09 06:09:36 y-mori Exp $
+-- $Header: /cvsroot/pgpool/pgpool-II/sample/replicate_def_pgbench.sql,v 1.2 2008/04/09 07:03:15 y-asaba Exp $
 
 INSERT INTO pgpool_catalog.replicate_def VALUES (
     'bench_parallel',
@@ -8,7 +8,7 @@ INSERT INTO pgpool_catalog.replicate_def VALUES (
     ARRAY['integer', 'integer', 'character(88)']
 );
 
-INSERT INTO pgpool_catalog.dist_def VALUES (
+INSERT INTO pgpool_catalog.replicate_def VALUES (
     'bench_parallel',
     'public',
     'tellers',
