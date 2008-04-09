@@ -1,6 +1,7 @@
--- $Header: /cvsroot/pgpool/pgpool-II/sql/system_db.sql,v 1.2 2007/11/09 04:56:00 y-mori Exp $
+-- $Header: /cvsroot/pgpool/pgpool-II/sql/system_db.sql,v 1.3 2008/04/09 07:01:27 y-asaba Exp $
 
 DROP TABLE pgpool_catalog.dist_def;
+DROP TABLE pgpool_catalog.replicate_def;
 DROP TABLE pgpool_catalog.query_cache;
 DROP SCHEMA pgpool_catalog;
 
