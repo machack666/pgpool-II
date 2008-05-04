@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.5 2008/02/08 06:47:52 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.6 2008/05/04 05:04:08 y-asaba Exp $
  *
  * pgpool-recovery: exec online recovery script from SELECT statement.
  *
@@ -57,9 +57,9 @@ pgpool_recovery(PG_FUNCTION_ARGS)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 				 (errmsg("must be superuser to use pgpool_recovery function"))));
 
-	sprintf(recovery_script, "%s/%s %s %s %s",
-			DataDir, script, DataDir, remote_host,
-			remote_data_directory);
+	snprintf(recovery_script, sizeof(recovery_script), "%s/%s %s %s %s",
+			 DataDir, script, DataDir, remote_host,
+			 remote_data_directory);
 	elog(DEBUG1, "recovery_script: %s", recovery_script);
 	r = system(recovery_script);
 
@@ -86,8 +86,9 @@ pgpool_remote_start(PG_FUNCTION_ARGS)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 				 (errmsg("must be superuser to use pgpool_remote_start function"))));
 
-	sprintf(recovery_script, "%s/%s %s %s", DataDir, REMOTE_START_FILE,
-			remote_host, remote_data_directory);
+	snprintf(recovery_script, sizeof(recovery_script),
+			 "%s/%s %s %s", DataDir, REMOTE_START_FILE,
+			 remote_host, remote_data_directory);
 	elog(DEBUG1, "recovery_script: %s", recovery_script);
 	r = system(recovery_script);
 
