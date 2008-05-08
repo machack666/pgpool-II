@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.21 2008/03/27 16:06:08 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.22 2008/05/08 03:02:04 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1757,7 +1757,7 @@ int select_load_balancing_node(void)
 	int i;
 
 	/* choose a backend in random manner with weight */
-	selected_slot = 0;
+	selected_slot = MASTER_NODE_ID;
 	total_weight = 0.0;
 
 	for (i=0;i<NUM_BACKENDS;i++)
