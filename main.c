@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.36 2008/03/12 05:06:37 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.37 2008/05/22 14:36:38 y-asaba Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1389,7 +1389,11 @@ int health_check(void)
 
 		read(fd, &kind, 1);
 
-		if (write(fd, "X", 1) < 0)
+		/*
+		 * If a backend raised a FATAL error(max connections error or
+		 * startin up error?), do not send a Terminate message.
+		 */
+		if ((kind != 'E') && (write(fd, "X", 1) < 0))
 		{
 			pool_error("health check failed during write. host %s at port %d is down. reason: %s. Perhaps wrong health check user?",
 					   BACKEND_INFO(i).backend_hostname,
