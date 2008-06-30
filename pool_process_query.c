@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.108 2008/05/30 07:18:44 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.109 2008/06/30 07:05:00 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1014,8 +1014,10 @@ static POOL_STATUS SimpleQuery(POOL_CONNECTION *frontend,
 				{
 					free_parser();
 
-					if(r_query->r_code != INSERT_DIST_NO_RULE)
+					if(r_query->r_code != INSERT_DIST_NO_RULE) {
+						in_progress = 0;
 						return r_query->status;
+					}
 				}
 				else if(r_query->type == T_SelectStmt)
 				{
