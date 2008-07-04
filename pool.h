@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.29 2008/02/12 11:16:09 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.30 2008/07/04 05:27:30 y-mori Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -417,7 +417,6 @@ extern POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 extern POOL_CONNECTION *pool_open(int fd);
 extern void pool_close(POOL_CONNECTION *cp);
 extern int pool_read(POOL_CONNECTION *cp, void *buf, int len);
-extern int pool_read_parallel(POOL_CONNECTION *cp, void *buf, int len);
 extern char *pool_read2(POOL_CONNECTION *cp, int len);
 extern int pool_write(POOL_CONNECTION *cp, void *buf, int len);
 extern int pool_flush(POOL_CONNECTION *cp);

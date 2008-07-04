@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.11 2008/02/18 09:58:39 y-asaba Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.12 2008/07/04 05:27:30 y-mori Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -111,100 +111,6 @@ void pool_close(POOL_CONNECTION *cp)
 * returns 0 on success otherwise -1.
 */
 int pool_read(POOL_CONNECTION *cp, void *buf, int len)
-{
-	static char readbuf[READBUFSZ];
-
-	int consume_size;
-	int readlen;
-
-	consume_size = consume_pending_data(cp, buf, len);
-	len -= consume_size;
-	buf += consume_size;
-
-	while (len > 0)
-	{
-		if (pool_check_fd(cp))
-		{
-			if (!IS_MASTER_NODE_ID(cp->db_node_id))
-			{
-				pool_log("pool_read: data is not ready in DB node: %d. abort this session",
-						 cp->db_node_id);
-				exit(1);
-			}
-			else
-			{
-				pool_error("pool_read: pool_check_fd failed (%s)", strerror(errno));
-			    return -1;
-			}
-		}
-
-		readlen = read(cp->fd, readbuf, READBUFSZ);
-		if (readlen == -1)
-		{
-			if (errno == EINTR || errno == EAGAIN)
-			{
-				pool_debug("pool_read: retrying due to %s", strerror(errno));
-				continue;
-			}
-
-			pool_error("pool_read: read failed (%s)", strerror(errno));
-
-			if (cp->isbackend)
-			{
-			    /* fatal error, notice to parent and exit */
-				notice_backend_error(cp->db_node_id);
-				child_exit(1);
-			}
-			else
-			{
-			    return -1;
-			}
-		}
-		else if (readlen == 0)
-		{
-			if (cp->isbackend)
-			{
-				pool_error("pool_read2: EOF encountered with backend");
-				return -1;
-
-#ifdef NOT_USED
-			    /* fatal error, notice to parent and exit */
-			    notice_backend_error(IS_MASTER_NODE_ID(cp->db_node_id));
-				child_exit(1);
-#endif
-			}
-			else
-			{
-				/*
-				 * if backend offers authentication method, frontend could close connection
-				 */
-				return -1;
-			}
-		}
-
-		if (len < readlen)
-		{
-			/* overrun. we need to save remaining data to pending buffer */
-			if (save_pending_data(cp, readbuf+len, readlen-len))
-				return -1;
-			memmove(buf, readbuf, len);
-			break;
-		}
-
-		memmove(buf, readbuf, readlen);
-		buf += readlen;
-		len -= readlen;
-	}
-
-	return 0;
-}
-
-/*
-* this function is used by SELECT QUERY at parallel query
-* read len bytes from cp
-* returns 0 on success otherwise -1.
-*/
-int pool_read_parallel(POOL_CONNECTION *cp, void *buf, int len)
 {
 	static char readbuf[READBUFSZ];
 
