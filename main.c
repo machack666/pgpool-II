@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.38 2008/08/28 12:35:32 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.39 2008/08/29 02:54:23 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -791,8 +791,19 @@ pid_t fork_a_child(int unix_fd, int inet_fd, int id)
 
 	if (pid == 0)
 	{
-		close(pipe_fds[0]);
-		close(pipe_fds[1]);
+		/* Before we unconditionaly closed pipe_fds[0]), pipe_fds[1])
+		 * here, which is apprently wrong since in the start up of
+		 * pgpool, pipe(2) is not called yet and it mistakely closes
+		 * fd 0. Now we check the fd > 0 before close(), expecting
+		 * pipe returns fds greater than 0.  Note that we cannot
+		 * unconditionaly remove close(2) calls since fork_a_child()
+		 * may be called *after* pgpool starting up.
+		 */
+		if (pipe_fds[0] > 0)
+		{
+			close(pipe_fds[0]);
+			close(pipe_fds[1]);
+		}
 
 		myargv = save_ps_display_args(myargc, myargv);
 
