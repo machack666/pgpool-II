@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.30 2008/07/04 05:27:30 y-mori Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.31 2008/11/07 09:20:24 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -161,6 +161,9 @@ typedef struct {
 	char *recovery_1st_stage_command;   /* Online recovery command in 1st stage */
 	char *recovery_2nd_stage_command;   /* Online recovery command in 2nd stage */
 	int recovery_timeout;				/* maximum time in seconds to wait for remote start-up */
+	int client_idle_limit_in_recovery;		/* If > 0, the client is forced to be
+											 *  disconnected after n seconds idle
+											 *  This parameter is only valid while in recovery 2nd statge */
 	int insert_lock;	/* if non 0, automatically lock table with INSERT to keep SERIAL
 						   data consistency */
 	int ignore_leading_white_space;		/* ignore leading white spaces of each query */

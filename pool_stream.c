@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.12 2008/07/04 05:27:30 y-mori Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.13 2008/11/07 09:20:25 t-ishii Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -95,7 +95,13 @@ POOL_CONNECTION *pool_open(int fd)
 */
 void pool_close(POOL_CONNECTION *cp)
 {
+	/*
+	 * shutdown connection to the client so that pgpool is not blocked
+	 */
+	if (!cp->isbackend)
+		shutdown(cp->fd, 1);
 	close(cp->fd);
+
 	free(cp->wbuf);
 	free(cp->hp);
 	if (cp->sbuf)
