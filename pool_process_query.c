@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.113 2008/11/07 09:20:24 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.114 2008/11/10 00:58:24 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4661,7 +4661,7 @@ retry_read_packet:
 
 	if (kind != 'Z')
 	{
-		pool_error("do_command: backend does not return ReadyForQuery");
+		pool_error("do_command: backend returns %c while expecting ReadyForQuery", kind);
 		return POOL_END;
 	}
 
