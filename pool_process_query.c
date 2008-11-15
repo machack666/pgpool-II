@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.116 2008/11/15 06:15:53 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.117 2008/11/15 07:10:16 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -5914,4 +5914,5 @@ static POOL_STATUS pool_discard_packet(POOL_CONNECTION_POOL *cp)
 			}
 		}
 	}
+	return POOL_CONTINUE;
 }
