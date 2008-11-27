@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.12 2008/03/12 03:54:55 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.13 2008/11/27 00:30:53 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -184,7 +184,7 @@ from pool_read_message_length and recheck the pg_hba.conf settings.");
 	/* md5 authentication? */
 	else if (authkind == 5)
 	{
-		if (NUM_BACKENDS > 1)
+		if (!RAW_MODE && NUM_BACKENDS > 1)
 		{
 			pool_send_error_message(frontend, protoMajor, AUTHFAIL_ERRORCODE,
 									"MD5 authentication is unsupported in replication, master-slave and parallel modes.",
