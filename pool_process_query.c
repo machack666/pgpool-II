@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.119 2008/12/08 12:32:29 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.120 2008/12/08 12:38:53 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -5397,6 +5397,9 @@ static POOL_STATUS read_kind_from_backend(POOL_CONNECTION *frontend, POOL_CONNEC
 								msg->data, "",
 								"check data consistency among db nodes",
 								__FILE__, __LINE__);
+
+		free_string(msg);
+
 		if (pool_config->replication_stop_on_mismatch)
 		{
 			degenerate_backend_set(degenerate_node, degenerate_node_num);
