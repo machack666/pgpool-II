@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.40 2008/09/05 04:25:45 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.41 2008/12/13 11:21:01 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -289,7 +289,7 @@ int main(int argc, char **argv)
 
 				if (kill(pid, SIGHUP) == -1)
 				{
-					pool_error("could not stop pid: %d. reason: %s", pid, strerror(errno));
+					pool_error("could not reload configuration file pid: %d. reason: %s", pid, strerror(errno));
 					pool_shmem_exit(1);
 					exit(1);
 				}
