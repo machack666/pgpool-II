@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.124 2008/12/13 11:23:36 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.125 2008/12/20 11:21:50 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2727,6 +2727,10 @@ POOL_STATUS OneNode_do_command(POOL_CONNECTION *frontend, POOL_CONNECTION *backe
  */
 int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query, Node *node)
 {
+	/* INSERT STATEMENT? */
+	if (!IsA(node, InsertStmt))
+		return 0;
+
 	if (pool_config->ignore_leading_white_space)
 	{
 		/* ignore leading white spaces */
@@ -2741,8 +2745,6 @@ int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query, Node *node)
 	if ((pool_config->insert_lock && strncasecmp(query, NO_LOCK_COMMENT, NO_LOCK_COMMENT_SZ)) ||
 		strncasecmp(query, LOCK_COMMENT, LOCK_COMMENT_SZ) == 0)
 	{
-		/* INSERT STATEMENT? */
-		if (IsA(node, InsertStmt))
 			return 1;
 	}
 
