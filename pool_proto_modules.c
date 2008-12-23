@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.2 2008/12/20 11:12:18 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.3 2008/12/23 12:24:09 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -438,15 +438,22 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 		 * - statement is INSERT
 		 * - either "INSERT LOCK" comment exists or insert_lock directive specified
 		 */
-		if (REPLICATION && need_insert_lock(backend, string, node))
+		if (REPLICATION)
 		{
-			/* start a transaction if needed and lock the table */
-			status = insert_lock(backend, string, (InsertStmt *)node);
-			if (status != POOL_CONTINUE)
+			/* start a transaction if needed */
+			if (start_internal_transaction(backend, (Node *)node) != POOL_CONTINUE)
+				return POOL_END;
+
+			/* check if need lock */
+			if (need_insert_lock(backend, string, node))
 			{
-				
-				free_parser();
-				return status;
+				/* if so, issue lock command */
+				status = insert_lock(backend, string, (InsertStmt *)node);
+				if (status != POOL_CONTINUE)
+				{
+					free_parser();
+					return status;
+				}
 			}
 		}
 		else if (REPLICATION && query == NULL && start_internal_transaction(backend, node))
