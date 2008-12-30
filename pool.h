@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.32 2008/12/20 23:02:01 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.33 2008/12/30 00:59:35 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -269,7 +269,7 @@ typedef struct {
 } POOL_CONNECTION_POOL_SLOT;
 
 typedef struct {
-	ConnectionInfo *info;
+	ConnectionInfo *info;		/* connection info on shmem */
     POOL_CONNECTION_POOL_SLOT	*slots[MAX_NUM_BACKENDS];
 } POOL_CONNECTION_POOL;
 
@@ -411,7 +411,8 @@ extern volatile sig_atomic_t backend_timer_expired; /* flag for connection close
 extern long int weight_master;	/* normalized weight of master (0-RAND_MAX range) */
 extern int my_proc_id;  /* process table id (!= UNIX's PID) */
 extern POOL_SYSTEMDB_CONNECTION_POOL *system_db_info; /* systemdb */
-extern ProcessInfo *pids; /* process information table */
+extern ProcessInfo *pids; /* shmem process information table */
+extern ConnectionInfo *con_info; /* shmem connection info table */
 extern int in_load_balance;		/* non 0 if in load balance mode */
 extern int selected_slot;		/* selected DB node for load balance */
 extern int master_slave_dml;	/* non 0 if master/slave mode is specified in config file */

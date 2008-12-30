@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.13 2008/11/27 00:30:53 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.14 2008/12/30 00:59:35 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -327,7 +327,8 @@ from pool_read_message_length and recheck the pg_hba.conf settings.");
 				pool_error("pool_do_auth: failed to read pid in slot %d", i);
 				return -1;
 			}
-			CONNECTION_SLOT(cp, i)->pid = pid;
+
+			CONNECTION_SLOT(cp, i)->pid = cp->info[i].pid = pid;
 
 			/* read key */
 			if (pool_read(CONNECTION(cp, i), &key, sizeof(key)) < 0)
@@ -335,7 +336,8 @@ from pool_read_message_length and recheck the pg_hba.conf settings.");
 				pool_error("pool_do_auth: failed to read key in slot %d", i);
 				return -1;
 			}
-			CONNECTION_SLOT(cp, i)->key = key;
+			CONNECTION_SLOT(cp, i)->key = cp->info[i].key = key;
+	
 		}
 	}
 

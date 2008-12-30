@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.41 2008/12/13 11:21:01 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.42 2008/12/30 00:59:35 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -114,7 +114,14 @@ static int trigger_failover_command(int node, const char *command_line);
 static struct sockaddr_un un_addr;		/* unix domain socket path */
 static struct sockaddr_un pcp_un_addr;  /* unix domain socket path for PCP */
 
-ProcessInfo *pids;	/* child pid table */
+ProcessInfo *pids;	/* shmem child pid table */
+
+/*
+ * shmem connection info table
+ * this is a two dimention array. i.e.:
+ * con_info[pool_config->num_init_children][pool_config->max_pool]
+ */
+ConnectionInfo *con_info;		
 
 static int unix_fd;	/* unix domain socket fd */
 static int inet_fd;	/* inet domain socket fd */
@@ -168,7 +175,6 @@ int main(int argc, char **argv)
 	int i;
 	int pid;
 	int size;
-	ConnectionInfo *con_info = NULL;
 	int retrycnt;
 	int sys_retrycnt;
 
