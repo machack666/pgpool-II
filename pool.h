@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.33 2008/12/30 00:59:35 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.34 2008/12/30 12:16:53 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -420,6 +420,9 @@ extern POOL_REQUEST_INFO *Req_info;
 extern volatile sig_atomic_t *InRecovery;
 extern char remote_ps_data[];		/* used for set_ps_display */
 extern volatile sig_atomic_t got_sighup;
+
+#define QUERY_STRING_BUFFER_LEN 1024
+extern char query_string_buffer[];		/* last query string sent to simpleQuery() */
 
 /*
  * public functions

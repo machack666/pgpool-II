@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.128 2008/12/30 01:05:37 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.129 2008/12/30 12:16:53 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3460,7 +3460,11 @@ POOL_STATUS read_kind_from_backend(POOL_CONNECTION *frontend, POOL_CONNECTION_PO
 
 	if (degenerate_node_num)
 	{
-		String *msg = init_string("kind mismatch among backends");
+		String *msg = init_string("kind mismatch among backends. ");
+
+		string_append_char(msg, "possible last query was: \"");
+		string_append_char(msg, query_string_buffer);
+		string_append_char(msg, "\" kind details are:");
 
 		for (i=0;i<NUM_BACKENDS;i++)
 		{
