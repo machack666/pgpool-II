@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.127 2008/12/23 12:26:48 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.128 2008/12/30 01:05:37 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3962,8 +3962,8 @@ static int detect_error(POOL_CONNECTION *backend, char *error_code, int major, b
 	memcpy(p, &kind, sizeof(kind));
 	p += sizeof(kind);
 
-	/* ErrorResponse or NoticeResponse message? */
-	if (kind == 'E' || kind == 'N')
+	/* ErrorResponse? */
+	if (kind == 'E')
 	{
 		/* read actual message */
 		if (major == PROTO_MAJOR_V3)
