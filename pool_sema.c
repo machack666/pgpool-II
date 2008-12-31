@@ -1,11 +1,11 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_sema.c,v 1.4 2008/01/29 01:56:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_sema.c,v 1.5 2008/12/31 14:42:34 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
  *
- * Portions Copyright (c) 2003-2008, PgPool Global Development Group
+ * Portions Copyright (c) 2003-2009, PgPool Global Development Group
  * Portions Copyright (c) 2003-2004, PostgreSQL Global Development Group
  *
  * Permission to use, copy, modify, and distribute this software and
@@ -82,7 +82,7 @@ pool_semaphore_create(int numSems)
 
 	if (semId < 0)
 	{
-		pool_error("could not create semaphores: %s", strerror(errno));
+		pool_error("could not create %d semaphores: %s", numSems, strerror(errno));
 		return -1;
 	}
 
