@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.131 2009/01/07 13:33:31 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.132 2009/01/14 14:54:08 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -251,9 +251,6 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 
 			for (i = 0; i < NUM_BACKENDS; i++)
 			{
-				pool_debug("i: %d master:%d readfd:%d exceptfd:%d", i, MASTER_NODE_ID, FD_ISSET(CONNECTION(backend, i)->fd, &readmask),
-						   FD_ISSET(CONNECTION(backend, i)->fd, &exceptmask));
-
 				if (VALID_BACKEND(i) && FD_ISSET(CONNECTION(backend, i)->fd, &readmask))
 				{
 					/*
