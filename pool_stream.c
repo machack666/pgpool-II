@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.13 2008/11/07 09:20:25 t-ishii Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.14 2009/01/22 09:29:02 y-mori Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL 
 * written by Tatsuo Ishii
@@ -170,7 +170,7 @@ int pool_read(POOL_CONNECTION *cp, void *buf, int len)
 		{
 			if (cp->isbackend)
 			{
-				pool_error("pool_read2: EOF encountered with backend");
+				pool_error("pool_read: EOF encountered with backend");
 				return -1;
 
 #ifdef NOT_USED
