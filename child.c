@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.25 2008/12/31 14:45:51 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26 2009/01/22 00:50:26 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -56,8 +56,6 @@
 #include "pool.h"
 #include "pool_ip.h"
 #include "md5.h"
-
-void child_exit(int code);
 
 static POOL_CONNECTION *do_accept(int unix_fd, int inet_fd, struct timeval *timeout);
 static StartupPacket *read_startup_packet(POOL_CONNECTION *cp);
@@ -1287,8 +1285,9 @@ static RETSIGTYPE authentication_timeout(int sig)
 }
 
 /*
- * send frontend exiting messages to all connections.
- * this is called when child life time expires or child max connections expires.
+ * send frontend exiting messages to all connections.  this is called
+ * in any case when child process exits, for example failover, child
+ * life time expires or child max connections expires.
  */
 static void send_frontend_exits(void)
 {
@@ -1354,11 +1353,16 @@ void pool_free_startup_packet(StartupPacket *sp)
 	}
 }
 
+/*
+ * Do house keeping works when pgpool child process exits
+ */
 void child_exit(int code)
 {
+	/* count down global connection counter */
 	if (accepted)
 		connection_count_down();
 
+	/* prepare to shutdown connections to system db */
 	if(pool_config->parallel_mode || pool_config->enable_query_cache)
 	{
 		if (system_db_info->pgconn)
@@ -1366,6 +1370,10 @@ void child_exit(int code)
 		if (pool_system_db_connection())
 			pool_close(pool_system_db_connection()->con);
 	}
+
+	/* let backend know now we are exiting */
+	send_frontend_exits();
+
 	exit(code);
 }
 
