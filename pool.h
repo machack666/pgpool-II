@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.35 2009/01/24 11:34:34 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.36 2009/01/25 10:13:15 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -56,7 +56,7 @@
 #define DEFAULT_SOCKET_DIR "/tmp"
 
 /* pid file name */
-#define PID_FILE_NAME "pgpool.pid"
+#define DEFAULT_PID_FILE_NAME "/var/run/pgpool/pgpool.pid"
 
 typedef enum {
 	POOL_CONTINUE = 0,
@@ -134,6 +134,7 @@ typedef struct {
 	int authentication_timeout; /* maximum time in seconds to complete client authentication */
     int	max_pool;	/* max # of connection pool per child */
     char *logdir;		/* logging directory */
+    char *pid_file_name;		/* pid file name */
     char *backend_socket_dir;	/* Unix domain socket directory for the PostgreSQL server */
 	int replication_mode;		/* replication mode */
 

@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.43 2008/12/31 14:45:51 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.44 2009/01/25 10:13:15 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -708,11 +708,9 @@ static void stop_me(void)
 static int read_pid_file(void)
 {
 	FILE *fd;
-	char path[POOLMAXPATHLEN];
 	char pidbuf[128];
 
-	snprintf(path, sizeof(path), "%s/%s", pool_config->logdir, PID_FILE_NAME);
-	fd = fopen(path, "r");
+	fd = fopen(pool_config->pid_file_name, "r");
 	if (!fd)
 	{
 		return -1;
@@ -720,7 +718,7 @@ static int read_pid_file(void)
 	if (fread(pidbuf, 1, sizeof(pidbuf), fd) <= 0)
 	{
 		pool_error("could not read pid file as %s. reason: %s",
-				   path, strerror(errno));
+				   pool_config->pid_file_name, strerror(errno));
 		fclose(fd);
 		return -1;
 	}
@@ -734,15 +732,13 @@ static int read_pid_file(void)
 static void write_pid_file(void)
 {
 	FILE *fd;
-	char path[POOLMAXPATHLEN];
 	char pidbuf[128];
 
-	snprintf(path, sizeof(path), "%s/%s", pool_config->logdir, PID_FILE_NAME);
-	fd = fopen(path, "w");
+	fd = fopen(pool_config->pid_file_name, "w");
 	if (!fd)
 	{
 		pool_error("could not open pid file as %s. reason: %s",
-				   path, strerror(errno));
+				   pool_config->pid_file_name, strerror(errno));
 		pool_shmem_exit(1);
 		exit(1);
 	}
@@ -751,7 +747,7 @@ static void write_pid_file(void)
 	if (fclose(fd))
 	{
 		pool_error("could not write pid file as %s. reason: %s",
-				   path, strerror(errno));
+				   pool_config->pid_file_name, strerror(errno));
 		pool_shmem_exit(1);
 		exit(1);
 	}
@@ -945,7 +941,6 @@ static void myunlink(const char* path)
 
 static void myexit(int code)
 {
-	char path[POOLMAXPATHLEN];
 	int i;
 	
 	if (getpid() != mypid)
@@ -971,8 +966,7 @@ static void myexit(int code)
 	
 	myunlink(un_addr.sun_path);
 	myunlink(pcp_un_addr.sun_path);
-	snprintf(path, sizeof(path), "%s/%s", pool_config->logdir, PID_FILE_NAME);
-	myunlink(path);
+	myunlink(pool_config->pid_file_name);
 
 	pool_shmem_exit(code);
 	exit(code);
