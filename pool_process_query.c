@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.136 2009/02/01 10:11:02 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.137 2009/02/06 15:30:51 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1007,6 +1007,11 @@ void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *backend)
 	strncpy(status[i].name, "logdir", POOLCONFIG_MAXNAMELEN);
 	snprintf(status[i].value, POOLCONFIG_MAXVALLEN, "%s", pool_config->logdir);
 	strncpy(status[i].desc, "logging directory", POOLCONFIG_MAXDESCLEN);
+	i++;
+
+	strncpy(status[i].name, "pid_file_name", POOLCONFIG_MAXNAMELEN);
+	snprintf(status[i].value, POOLCONFIG_MAXVALLEN, "%s", pool_config->pid_file_name);
+	strncpy(status[i].desc, "path to pid file", POOLCONFIG_MAXDESCLEN);
 	i++;
 
 	strncpy(status[i].name, "backend_socket_dir", POOLCONFIG_MAXNAMELEN);
@@ -3990,7 +3995,7 @@ POOL_STATUS end_internal_transaction(POOL_CONNECTION_POOL *backend)
 
 	/*
 	 * We must block all signals. If pgpool SIGTERM, SIGINT or SIGQUIT
-	 * is delivered, it possibly causes data consistency.
+	 * is delivered, it could cause data inconsistency.
 	 */
 	POOL_SETMASK2(&BlockSig, &oldmask);
 
