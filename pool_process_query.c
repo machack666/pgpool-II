@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.137 2009/02/06 15:30:51 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.138 2009/02/10 01:11:43 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3910,8 +3910,10 @@ static bool is_internal_transaction_needed(Node *node)
 		T_ViewStmt,		/* CREATE VIEW */
 		T_LoadStmt,
 		T_CreateDomainStmt,
-		T_CreatedbStmt,
-		T_DropdbStmt,
+		/*
+		  T_CreatedbStmt,	CREATE DATABASE/DROP DATABASE cannot execute inside a transaction block
+		  T_DropdbStmt,
+		*/
 		T_CreateSeqStmt,
 		T_AlterSeqStmt,
 		T_VariableSetStmt,		/* SET */
