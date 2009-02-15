@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.25 2009/01/25 10:13:48 t-ishii Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.26 2009/02/15 05:26:28 t-ishii Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -76,7 +76,10 @@ replicate_select = false
 
 # Semicolon separated list of queries to be issued at the end of a session
 reset_query_list = 'ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT'
-# for 8.3 or newer PostgreSQL versions following is recommended.
+# for 8.3 or newer PostgreSQL versions DISCARD ALL can be used as
+# follows. However beware that DISCARD ALL holds exclusive lock on
+# pg_listener so it will be a serious performance problem if there are
+# lots of concurrent sessions.
 # reset_query_list = 'ABORT; DISCARD ALL'
 
 # If true print timestamp on each log line.
