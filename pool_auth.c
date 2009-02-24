@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.14 2008/12/30 00:59:35 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.15 2009/02/24 02:20:40 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1036,7 +1036,7 @@ int *pool_read_message_length2(POOL_CONNECTION_POOL *cp)
 
 			if (length != length0)
 			{
-				pool_error("pool_read_message_length2: message length (%d) in slot %d does not match with slot 0(%d)", length, i, length0);
+				pool_log("pool_read_message_length2: message length (%d) in slot %d does not match with slot 0(%d)", length, i, length0);
 			}
 
 			if (length < 0)
