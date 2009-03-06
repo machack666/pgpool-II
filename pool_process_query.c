@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141 2009/02/24 02:20:40 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.1 2009/03/06 23:54:37 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3465,7 +3465,7 @@ POOL_STATUS read_kind_from_backend(POOL_CONNECTION *frontend, POOL_CONNECTION_PO
 					pool_error("read_kind_from_backend: failed to read parameter status packet from %d th backend", i);
 				}
 				value = p + strlen(p) + 1;
-				pool_log("read_kind_from_backend: parameter name: %s value: %s", p, value);
+				pool_debug("read_kind_from_backend: parameter name: %s value: %s", p, value);
 			} while (kind == 'S');
 
 			kind_list[i] = kind;
