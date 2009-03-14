@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.2 2009/03/07 09:22:12 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.3 2009/03/14 03:42:44 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3055,6 +3055,15 @@ int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query, Node *node)
 	char *rel;
 	int use_serial = 0;
 	char *dbname;
+
+	/*
+	 * for version 2 protocol, we cannot check if it's actually uses
+	 * SERIAL data types or not since the underlying infrastructure
+	 * (do_query) does not support the protocol. So we just return
+	 * false.
+	 */
+	if (MAJOR(backend) == PROTO_MAJOR_V2)
+		return 0;
 
 	/* INSERT statement? */
 	if (!IsA(node, InsertStmt))
