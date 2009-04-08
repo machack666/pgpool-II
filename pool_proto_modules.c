@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.7 2009/04/03 13:30:27 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.8 2009/04/08 11:12:11 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -347,7 +347,7 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 				force_replication = 1;
 
 			/*
-			 * Before we do followings only when frontend == NULL,
+			 * Before we did followings only when frontend != NULL,
 			 * which was wrong since if, for example, reset_query_list
 			 * contains "DISCARD ALL", then it does not register
 			 * pending function and it causes trying to DEALLOCATE non
@@ -663,18 +663,6 @@ POOL_STATUS Execute(POOL_CONNECTION *frontend,
 	string = pool_read2(frontend, len);
 
 	pool_debug("Execute: portal name <%s>", string);
-
-	if (receive_extended_begin)
-	{
-		/* send sync message */
-		send_extended_protocol_message(backend, MASTER_NODE_ID, "S", 0, "");
-
-		kind = pool_read_kind(backend);
-		if (kind != 'Z')
-			return POOL_END;
-		if (ReadyForQuery(frontend, backend, 0) != POOL_CONTINUE)
-			return POOL_END;
-	}
 
 	portal = lookup_prepared_statement_by_portal(&prepared_list,
 												 string);
@@ -1437,6 +1425,7 @@ POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 										   POOL_CONNECTION_POOL *backend)
 {
 	char fkind;
+	char kind;
 	POOL_STATUS status;
 	int i;
 
@@ -1450,6 +1439,18 @@ POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 	}
 
 	pool_debug("read kind from frontend %c(%02x)", fkind, fkind);
+
+	if (receive_extended_begin)
+	{
+		/* send sync message */
+		send_extended_protocol_message(backend, MASTER_NODE_ID, "S", 0, "");
+
+		kind = pool_read_kind(backend);
+		if (kind != 'Z')
+			return POOL_END;
+		if (ReadyForQuery(frontend, backend, 0) != POOL_CONTINUE)
+			return POOL_END;
+	}
 
 	switch (fkind)
 	{
