@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.8 2009/04/08 11:12:11 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.9 2009/05/01 00:37:24 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1442,6 +1442,8 @@ POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 
 	if (receive_extended_begin)
 	{
+		receive_extended_begin = 0;
+
 		/* send sync message */
 		send_extended_protocol_message(backend, MASTER_NODE_ID, "S", 0, "");
 
