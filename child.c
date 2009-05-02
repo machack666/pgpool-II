@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26 2009/01/22 00:50:26 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.1 2009/05/02 08:41:03 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -457,7 +457,11 @@ void do_child(int unix_fd, int inet_fd)
 						 * this connection since it might be in unknown status
 						 */
 						if (status1 != POOL_CONTINUE)
+						{
+							pool_debug("error in resetting connections. discarding connection pools...");
+							pool_send_frontend_exits(backend);
 							pool_discard_cp(sp->user, sp->database, sp->major);
+						}
 						else
 							pool_connection_pool_timer(backend);
 					}
