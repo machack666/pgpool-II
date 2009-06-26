@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.5 2009/05/27 02:01:44 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.6 2009/06/26 04:59:37 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -383,6 +383,8 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 					break;
 				default:
 					status = SimpleForwardToFrontend(kind, frontend, backend);
+					if (pool_flush(frontend))
+						return POOL_END;
 					break;
 			}
 		}
@@ -1793,6 +1795,8 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 			ret = SimpleForwardToFrontend(kind1, frontend, backend);
 			if (ret != POOL_CONTINUE)
 				return ret;
+			if (pool_flush(frontend))
+				return POOL_END;
 		}
 
 		if (ret != POOL_CONTINUE)
