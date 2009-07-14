@@ -1,10 +1,10 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.6.2.1 2009/07/14 08:39:15 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.6.2.2 2009/07/14 08:42:24 t-ishii Exp $
  *
  * pgpool-recovery: exec online recovery script from SELECT statement.
  *
- * Copyright (c) 2003-2008	PgPool Global Development Group
+ * Copyright (c) 2003-2009	PgPool Global Development Group
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby
