@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.6 2008/05/04 05:04:08 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/sql/pgpool-recovery/pgpool-recovery.c,v 1.6.2.1 2009/07/14 08:39:15 t-ishii Exp $
  *
  * pgpool-recovery: exec online recovery script from SELECT statement.
  *
@@ -23,6 +23,7 @@
 #include "miscadmin.h"
 #include "executor/spi.h"
 #include "funcapi.h"
+#include "utils/builtins.h"		/* PostgreSQL 8.4 needs this for textout */
 
 #define REMOTE_START_FILE "pgpool_remote_start"
 
