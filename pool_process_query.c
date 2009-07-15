@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.6 2009/06/26 04:59:37 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.7 2009/07/15 05:14:09 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2081,13 +2081,13 @@ static int reset_backend(POOL_CONNECTION_POOL *backend, int qcnt)
 
 	if (qcnt >= qn)
 	{
-		if (qcnt >= qn + prepared_list.cnt)
+		if (prepared_list.cnt == 0)
 		{
 			reset_prepared_list(&prepared_list);
 			return 2;
 		}
 
-		send_deallocate(backend, &prepared_list, qcnt - qn);
+		send_deallocate(backend, &prepared_list, 0);
 		return 1;
 	}
 
