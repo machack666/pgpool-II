@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.145 2009/05/02 08:48:46 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.146 2009/07/15 06:09:09 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1671,12 +1671,14 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 	free(p1);
 	if (status)
 		return POOL_END;
-
+#ifdef NOT_USED
 	if (kind == 'A')	/* notification response */
 	{
 		pool_flush(frontend);	/* we need to immediately notice to frontend */
 	}
 	else if (kind == 'E')		/* error response? */
+#endif
+	if (kind == 'E')		/* error response? */
 	{
 		int i;
 		int res1;
@@ -2051,13 +2053,13 @@ static int reset_backend(POOL_CONNECTION_POOL *backend, int qcnt)
 
 	if (qcnt >= qn)
 	{
-		if (qcnt >= qn + prepared_list.cnt)
+		if (prepared_list.cnt == 0)
 		{
 			reset_prepared_list(&prepared_list);
 			return 2;
 		}
 
-		send_deallocate(backend, &prepared_list, qcnt - qn);
+		send_deallocate(backend, &prepared_list, 0);
 		return 1;
 	}
 
