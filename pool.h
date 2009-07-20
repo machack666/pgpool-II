@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.36 2009/01/25 10:13:15 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.37 2009/07/20 12:06:25 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -483,6 +483,7 @@ extern int connect_unix_domain_socket(int secondary_backend);
 extern int connect_inet_domain_socket_by_port(char *host, int port);
 extern int connect_unix_domain_socket_by_port(int port, char *socket_dir);
 
+extern void pool_set_timeout(int timeoutval);
 extern int pool_check_fd(POOL_CONNECTION *cp);
 
 extern void pool_send_frontend_exits(POOL_CONNECTION_POOL *backend);
