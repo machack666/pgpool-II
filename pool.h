@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.36.2.2 2009/07/20 11:47:43 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.36.2.3 2009/07/21 01:36:24 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -77,6 +77,9 @@ typedef enum {
 /* protocol major version numbers */
 #define PROTO_MAJOR_V2	2
 #define PROTO_MAJOR_V3	3
+
+/* Cancel packet proto major */
+#define PROTO_CANCEL	80877102
 
 /*
  * In protocol 3.0 and later, the startup packet length is not fixed, but
