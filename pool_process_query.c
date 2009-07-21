@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.149 2009/07/20 12:21:54 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.150 2009/07/21 00:30:50 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -4093,14 +4093,25 @@ static bool is_internal_transaction_needed(Node *node)
 	if (bsearch(&nodeTag(node), nodemap, sizeof(nodemap)/sizeof(nodemap[0]), sizeof(NodeTag), compare) != NULL)
 	{
 		/*
-		 * chek CREATE INDEX CONCURRENTLY. If so, do not start transaction
+		 * Check CREATE INDEX CONCURRENTLY. If so, do not start transaction
 		 */
 		if (IsA(node, IndexStmt))
 		{
 			if (((IndexStmt *)node)->concurrent)
 				return false;
 		}
+
+		/*
+		 * Check CLUSTER with no option. If so, do not start transaction
+		 */
+		else if (IsA(node, ClusterStmt))
+		{
+			if (((ClusterStmt *)node)->relation == NULL)
+				return false;
+		}
+
 		return true;
+
 	}
 	return false;
 }
