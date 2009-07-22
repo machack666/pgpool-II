@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.151 2009/07/22 08:26:56 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.152 2009/07/22 08:51:49 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -749,7 +749,7 @@ POOL_STATUS pool_parallel_exec(POOL_CONNECTION *frontend,
 					if((kind == 'C' || kind == 'c' || kind == 'E') &&
 						used_count == NUM_BACKENDS -1)
 					{
-						pool_debug("pool_parallel_exec: kind from backend: D %ul", datacount);
+						pool_debug("pool_parallel_exec: kind from backend: D %lu", datacount);
 
 						if(error_flag == 0)
 						{
