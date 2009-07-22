@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.1.2.1 2009/07/20 11:47:43 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.1.2.2 2009/07/22 05:33:28 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -164,6 +164,7 @@ extern POOL_STATUS end_internal_transaction(POOL_CONNECTION_POOL *backend);
 extern int detect_deadlock_error(POOL_CONNECTION *master, int major);
 extern int detect_serialization_error(POOL_CONNECTION *master, int major);
 extern int detect_active_sql_transaction_error(POOL_CONNECTION *backend, int major);
+extern int detect_query_cancel_error(POOL_CONNECTION *backend, int major);
 extern bool is_partition_table(POOL_CONNECTION_POOL *backend, Node *node);
 extern POOL_STATUS pool_discard_packet(POOL_CONNECTION_POOL *cp);
 
