@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.2 2009/07/20 11:47:43 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.3 2009/07/22 08:46:55 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1653,7 +1653,7 @@ static int s_do_auth(POOL_CONNECTION_POOL_SLOT *cp, char *password)
 	}
 	else
 	{
-		pool_error("s_do_auth: auth kind %d not supported yet");
+		pool_error("s_do_auth: auth kind %d not supported yet", auth_kind);
 		return -1;
 	}
 
