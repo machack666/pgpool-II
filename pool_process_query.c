@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.152 2009/07/22 08:51:49 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.153 2009/07/26 03:02:52 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -186,8 +186,10 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 			}
 
 			/*
-			 * Do not use VALID_BACKEND macro.
-			 * Because if in_load_balance == 1, VALID_BACKEND macro may return 0.
+			 * If we are in load balance mode and the selected node is
+			 * down, we need to re-select load_balancing_node.  Note
+			 * that we cannnot use VALID_BACKEND macro here.  If
+			 * in_load_balance == 1, VALID_BACKEND macro may return 0.
 			 */
 			if (pool_config->load_balance_mode &&
 				BACKEND_INFO(backend->info->load_balancing_node).backend_status == CON_DOWN)
