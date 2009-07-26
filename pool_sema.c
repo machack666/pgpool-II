@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_sema.c,v 1.5 2008/12/31 14:42:34 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_sema.c,v 1.5.2.1 2009/07/26 02:57:47 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -66,7 +66,7 @@ IpcSemaphoreKill(int status, Datum semId)
 	semun.val = 0;				/* unused, but keep compiler quiet */
 
 	if (semctl(semId, 0, IPC_RMID) < 0)
-		pool_log("semctl(%d, 0, IPC_RMID, ...) failed: %s", semId, strerror(errno));
+		pool_log("semctl(%lu, 0, IPC_RMID, ...) failed: %s", semId, strerror(errno));
 }
 
 /*
@@ -97,7 +97,7 @@ pool_semaphore_create(int numSems)
 		if (semctl(semId, i, SETVAL, semun) < 0)
 		{
 			pool_error("semctl(%d, %d, SETVAL, %d) failed: %s",
-					   semId, i, 1);
+					   semId, i, 1, strerror(errno));
 			return -1;
 		}
 	}
