@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.12 2009/07/26 03:01:39 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.13 2009/07/30 07:46:32 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -3161,7 +3161,7 @@ int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query, Node *node)
 	if (!IsA(node, InsertStmt))
 		return 0;
 
-	/* need to ignore leading while spaces? */
+	/* need to ignore leading white spaces? */
 	if (pool_config->ignore_leading_white_space)
 	{
 		/* ignore leading white spaces */
