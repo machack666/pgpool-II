@@ -1,8 +1,8 @@
-# $Header: /cvsroot/pgpool/pgpool-II/test/parser/Makefile,v 1.1 2007/10/03 04:47:18 y-asaba Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/test/parser/Makefile,v 1.2 2009/07/30 14:44:21 t-ishii Exp $
 
 PROGRAM=parser-test
 PGPOOL_SRC=../../parser
-PARSER_OBJS=gram.o parser.o pool_string.o list.o makefuncs.o value.o nodes.o pool_memory.o main.o keywords.o outfuncs.o
+PARSER_OBJS=gram.o parser.o pool_string.o list.o makefuncs.o value.o nodes.o pool_memory.o main.o keywords.o outfuncs.o copyfuncs.o kwlookup.o
 
 all: $(PROGRAM)
 
@@ -59,6 +59,12 @@ scan.c : $(PGPOOL_SRC)/scan.l
 	flex -o$@ $<
 
 pool_memory.o: $(PGPOOL_SRC)/pool_memory.c $(PGPOOL_SRC)/pool_memory.h
+	gcc -Wall -c -g -include pool.h -I. -I $(PGPOOL_SRC) $<
+
+copyfuncs.o: $(PGPOOL_SRC)/copyfuncs.c
+	gcc -Wall -c -g -include pool.h -I. -I $(PGPOOL_SRC) $<
+
+kwlookup.o: $(PGPOOL_SRC)/kwlookup.c
 	gcc -Wall -c -g -include pool.h -I. -I $(PGPOOL_SRC) $<
 
 test: $(PROGRAM)

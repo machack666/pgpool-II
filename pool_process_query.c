@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.154 2009/07/28 00:34:19 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.155 2009/07/30 14:44:21 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -2216,7 +2216,8 @@ int is_select_query(Node *node, char *sql)
 			return 0;
 
 		if (IsA(node, SelectStmt))
-			return (*sql == 's' || *sql == 'S' || *sql == '(');
+			return (*sql == 's' || *sql == 'S' || *sql == '(' ||
+					*sql == 'w' || *sql == 'W' || *sql == 't' || *sql == 'T');
 		else
 			return (*sql == 'd' || *sql == 'D');
 	}
