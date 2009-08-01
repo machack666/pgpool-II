@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.3 2009/07/22 08:46:55 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.4 2009/08/01 11:40:38 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1249,6 +1249,8 @@ static RETSIGTYPE close_idle_connection(int sig)
 	{
 		if (!MASTER_CONNECTION(p))
 			continue;
+ 		if (!MASTER_CONNECTION(p)->sp)
+			continue;
 		if (MASTER_CONNECTION(p)->sp->user == NULL)
 			continue;
 
@@ -1308,6 +1310,8 @@ static void send_frontend_exits(void)
 	for (i=0;i<pool_config->max_pool;i++, p++)
 	{
 		if (!MASTER_CONNECTION(p))
+			continue;
+		if (!MASTER_CONNECTION(p)->sp)
 			continue;
 		if (MASTER_CONNECTION(p)->sp->user == NULL)
 			continue;
