@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.6.2.6 2009/07/22 08:46:55 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.6.2.7 2009/08/06 07:55:17 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -670,6 +670,7 @@ POOL_STATUS Execute(POOL_CONNECTION *frontend,
 
 		string1 = portal->sql_string;
 		node = (Node *)p_stmt->query;
+		strncpy(query_string_buffer, string1, sizeof(query_string_buffer));
 
 		if ((IsA(node, PrepareStmt) || IsA(node, DeallocateStmt) ||
 			 IsA(node, VariableSetStmt)) &&
