@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.13.2.1 2009/08/01 11:34:23 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_connection_pool.c,v 1.13.2.2 2009/08/11 13:23:52 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -584,8 +584,6 @@ static POOL_CONNECTION_POOL *new_connection(POOL_CONNECTION_POOL *p)
 			return NULL;
 		}
 
-		p->slots[i] = s;
-
 		if (create_cp(s, i) == NULL)
 		{
 			/* connection failed. mark this backend down */
@@ -596,6 +594,8 @@ static POOL_CONNECTION_POOL *new_connection(POOL_CONNECTION_POOL *p)
 			notice_backend_error(i);
 			child_exit(1);
 		}
+
+		p->slots[i] = s;
 
 		if (pool_init_params(&s->con->params))
 		{
