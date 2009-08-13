@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.30 2009/08/01 11:41:30 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.31 2009/08/13 13:40:20 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1228,8 +1228,10 @@ static RETSIGTYPE die(int sig)
 			break;
 	}
 
-	send_frontend_exits();
-
+	/*
+	 * child_exit() does this. So we don't need it.
+	 * send_frontend_exits();
+	 */
 	child_exit(0);
 }
 
