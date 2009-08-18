@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.14 2009/08/06 07:57:03 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.15 2009/08/18 08:41:36 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -530,7 +530,7 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 			if (send_simplequery_message(MASTER(backend), len, string, MAJOR(backend)) != POOL_CONTINUE)
 				return POOL_END;
 
-			if (wait_for_query_response(frontend, MASTER(backend), string) != POOL_CONTINUE)
+			if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
 			{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -572,7 +572,7 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 			if (!VALID_BACKEND(i) || IS_MASTER_NODE_ID(i))
 				continue;
 
-			if (wait_for_query_response(frontend, CONNECTION(backend, i), string) != POOL_CONTINUE)
+			if (wait_for_query_response(frontend, CONNECTION(backend, i), string, MAJOR(backend)) != POOL_CONTINUE)
 			{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -592,7 +592,7 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 			if (send_simplequery_message(MASTER(backend), len, string, MAJOR(backend)) != POOL_CONTINUE)
 				return POOL_END;
 
-			if (wait_for_query_response(frontend, MASTER(backend), string) != POOL_CONTINUE)
+			if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
 			{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -615,7 +615,7 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 		if (send_simplequery_message(MASTER(backend), len, string, MAJOR(backend)) != POOL_CONTINUE)
 			return POOL_END;
 
-		if (wait_for_query_response(frontend, MASTER(backend), string) != POOL_CONTINUE)
+		if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
 		{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -744,7 +744,7 @@ POOL_STATUS Execute(POOL_CONNECTION *frontend,
 			if (send_execute_message(backend, MASTER_NODE_ID, len, string) != POOL_CONTINUE)
 				return POOL_END;
 
-			if (wait_for_query_response(frontend, MASTER(backend), string) != POOL_CONTINUE)
+			if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
 			{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -792,7 +792,7 @@ POOL_STATUS Execute(POOL_CONNECTION *frontend,
 			if (!VALID_BACKEND(i) || IS_MASTER_NODE_ID(i))
 				continue;
 
-			if (wait_for_query_response(frontend, CONNECTION(backend, i), string) != POOL_CONTINUE)
+			if (wait_for_query_response(frontend, CONNECTION(backend, i), string, MAJOR(backend)) != POOL_CONTINUE)
 			{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -812,7 +812,7 @@ POOL_STATUS Execute(POOL_CONNECTION *frontend,
 			if (send_execute_message(backend, MASTER_NODE_ID, len, string) != POOL_CONTINUE)
 				return POOL_END;
 
-			if (wait_for_query_response(frontend, MASTER(backend), string) != POOL_CONTINUE)
+			if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
 			{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;
@@ -831,7 +831,7 @@ POOL_STATUS Execute(POOL_CONNECTION *frontend,
 		if (send_execute_message(backend, MASTER_NODE_ID, len, string) != POOL_CONTINUE)
 			return POOL_END;
 
-		if (wait_for_query_response(frontend, MASTER(backend), string) != POOL_CONTINUE)
+		if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
 		{
 				/* Cancel current transaction */
 				CancelPacket cancel_packet;

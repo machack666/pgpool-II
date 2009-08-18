@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.3 2009/07/22 08:26:56 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.4 2009/08/18 08:41:36 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -141,7 +141,7 @@ extern POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 										   POOL_CONNECTION_POOL *backend);
 
 
-extern POOL_STATUS wait_for_query_response(POOL_CONNECTION *frontend, POOL_CONNECTION *backend, char *string);
+extern POOL_STATUS wait_for_query_response(POOL_CONNECTION *frontend, POOL_CONNECTION *backend, char *string, int protoVersion);
 extern int is_select_query(Node *node, char *sql);
 extern int is_sequence_query(Node *node);
 extern int is_start_transaction_query(Node *node);
