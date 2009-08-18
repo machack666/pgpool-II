@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.31 2009/08/13 13:40:20 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.32 2009/08/18 08:32:13 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -189,7 +189,10 @@ void do_child(int unix_fd, int inet_fd)
 				timeout.tv_sec == 0 && timeout.tv_usec == 0)
 			{
 				pool_debug("child life %d seconds expired", pool_config->child_life_time);
-				send_frontend_exits();
+				/*
+				 * Doesn't need to call this. child_exit() calls it.
+				 * send_frontend_exits();
+				 */
 				child_exit(2);
 			}
 			continue;
