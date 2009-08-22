@@ -1,8 +1,8 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_signal.c,v 1.3 2008/01/29 01:56:36 y-asaba Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_signal.c,v 1.4 2009/08/22 04:04:21 t-ishii Exp $
  *
- * pgpool: a language independent connection pool server for PostgreSQL 
+ * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
  *
  * Portions Copyright (c) 2003-2008, PgPool Global Development Group
@@ -124,7 +124,7 @@ poolinitmask(void)
 /* Win32 signal handling is in backend/port/win32/signal.c */
 #ifndef WIN32
 
-/* 
+/*
  * We need to check actually the system has the posix signals or not, but...
  */
 #define HAVE_POSIX_SIGNALS
