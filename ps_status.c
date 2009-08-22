@@ -1,12 +1,12 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/ps_status.c,v 1.3 2009/01/18 13:54:28 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/ps_status.c,v 1.3.2.1 2009/08/22 04:19:49 t-ishii Exp $
  *
  * This file was imported from PostgreSQL source code.
  * See below for the copyright and description.
  *
- * pgpool: a language independent connection pool server for PostgreSQL 
+ * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
  *
  * Portions Copyright (c) 2003-2009	PgPool Global Development Group

@@ -1,8 +1,8 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.14.2.1 2009/05/02 08:45:35 t-ishii Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.14.2.2 2009/08/22 04:19:49 t-ishii Exp $
 *
-* pgpool: a language independent connection pool server for PostgreSQL 
+* pgpool: a language independent connection pool server for PostgreSQL
 * written by Tatsuo Ishii
 *
 * Copyright (c) 2003-2009	PgPool Global Development Group
@@ -484,7 +484,7 @@ int pool_write_and_flush(POOL_CONNECTION *cp, void *buf, int len)
 	return pool_flush(cp);
 }
 
-/* 
+/*
  * read a string until EOF or NULL is encountered.
  * if line is not 0, read until new line is encountered.
 */
@@ -769,7 +769,7 @@ int pool_unread(POOL_CONNECTION *cp, void *data, int len)
 	void *p = cp->hp;
 	int n = cp->len + len;
 	int realloc_size;
-	
+
 	if (cp->bufsz < n)
 	{
 		realloc_size = (n/READBUFSZ+1)*READBUFSZ;

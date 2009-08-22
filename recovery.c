@@ -1,8 +1,8 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/recovery.c,v 1.12 2009/02/05 00:26:09 t-ishii Exp $
- * 
- * pgpool: a language independent connection pool server for PostgreSQL 
+ * $Header: /cvsroot/pgpool/pgpool-II/recovery.c,v 1.12.2.1 2009/08/22 04:19:49 t-ishii Exp $
+ *
+ * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
  *
  * Copyright (c) 2003-2008	PgPool Global Development Group
@@ -288,7 +288,7 @@ static int check_postmaster_started(BackendInfo *backend)
 		if (WAIT_RETRY_COUNT != 0)
 			sleep(3);
 	} while (i++ < WAIT_RETRY_COUNT);
-	
+
 	pool_error("check_postmaster_started: remote host start up did not finish in %d sec.", pool_config->recovery_timeout);
 	return 1;
 }
