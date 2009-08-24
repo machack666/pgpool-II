@@ -1,6 +1,10 @@
-$Header: /cvsroot/pgpool/pgpool-II/TODO,v 1.18 2009/02/28 04:45:23 t-ishii Exp $
+$Header: /cvsroot/pgpool/pgpool-II/TODO,v 1.18.2.1 2009/08/24 04:36:10 t-ishii Exp $
 
 * General
+
+- Add backend id to statement log
+
+- Show PostgreSQL backend process ids in process status
 
 - Prepare for changing postgresql.conf directives which produce 'S'
   message. Othewise we get:
