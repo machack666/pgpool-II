@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.159 2009/08/22 04:04:21 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.160 2009/09/06 03:54:50 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -876,7 +876,7 @@ POOL_STATUS wait_for_query_response(POOL_CONNECTION *frontend, POOL_CONNECTION *
  * If you want to monitor client connection even if you are using V2 protocol,
  * define following
  */
-#define SEND_NOTICE_ON_PROTO2
+#undef SEND_NOTICE_ON_PROTO2
 #ifdef SEND_NOTICE_ON_PROTO2
 				static char *notice_message = {"keep alive checking from pgpool-II"};
 
