@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.15.2.1 2009/08/22 04:19:49 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_auth.c,v 1.15.2.2 2009/09/23 02:03:12 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -1082,7 +1082,7 @@ signed char pool_read_kind(POOL_CONNECTION_POOL *cp)
 		{
 			if (kind != kind0)
 			{
-				pool_error("pool_read_kind: kind does not match between master(%d) slot[%d] (%d)",
+				pool_error("pool_read_kind: kind does not match between master(%x) slot[%d] (%x)",
 						   kind0, i, kind);
 				return -1;
 			}
@@ -1122,7 +1122,7 @@ int pool_read_int(POOL_CONNECTION_POOL *cp)
 		{
 			if (data != data0)
 			{
-				pool_error("pool_read_int: data does not match between between master(%d) slot[%d] (%d)",
+				pool_error("pool_read_int: data does not match between between master(%x) slot[%d] (%x)",
 						   data0, i, data);
 				return -1;
 			}
