@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.51 2009/08/22 04:04:21 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.52 2009/09/25 07:37:28 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -763,7 +763,7 @@ static void write_pid_file(void)
 		exit(1);
 	}
 	snprintf(pidbuf, sizeof(pidbuf), "%d", (int)getpid());
-	fwrite(pidbuf, strlen(pidbuf), 1, fd);
+	fwrite(pidbuf, strlen(pidbuf)+1, 1, fd);
 	if (fclose(fd))
 	{
 		pool_error("could not write pid file as %s. reason: %s",
