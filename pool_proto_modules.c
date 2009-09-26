@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.6.2.11 2009/09/25 14:36:57 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.6.2.12 2009/09/26 09:14:52 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -923,6 +923,9 @@ POOL_STATUS Parse(POOL_CONNECTION *frontend,
 	}
 	else
 	{
+		/* Save last query string for logging purpose */
+		snprintf(query_string_buffer, sizeof(query_string_buffer), "Parse: %s", stmt);
+
 		node = (Node *) lfirst(list_head(parse_tree_list));
 
 		insert_stmt_with_lock = need_insert_lock(backend, stmt, node);
@@ -1506,7 +1509,7 @@ POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 			status = Parse(frontend, backend);
 			break;
 
-		case 'S':
+		case 'S':  /* Sync message */
 			receive_extended_begin = 0;
 			/* fall through */
 
