@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.21 2009/09/26 07:36:47 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.22 2009/10/02 07:53:08 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -823,7 +823,7 @@ POOL_STATUS send_simplequery_message(POOL_CONNECTION *backend, int len, char *st
 
 /*
  * Wait for query response from single node. This checks frontend
- * connection by writing dummy parameter status packet every 1
+ * connection by writing dummy parameter status packet every 30
  * seccond, and if the connection broke, returns error since there's
  * no point in that waiting until backend returns response.
  */
