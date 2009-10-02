@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.18 2009/09/26 09:17:27 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.19 2009/10/02 07:57:59 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -996,12 +996,22 @@ POOL_STATUS Parse(POOL_CONNECTION *frontend,
 
 	if (REPLICATION || PARALLEL_MODE || MASTER_SLAVE)
 	{
-		/* We must synchronize because Parse message acquires table
+		/*
+		 * We must synchronize because Parse message acquires table
 		 * locks.
 		 */
-		pool_debug("waiting for master completing the query");
-		if (synchronize(MASTER(backend)))
+		pool_debug("Parse: waiting for master completing the query");
+		if (wait_for_query_response(frontend, MASTER(backend), string, MAJOR(backend)) != POOL_CONTINUE)
+		{
+			/* Cancel current transaction */
+			CancelPacket cancel_packet;
+
+			cancel_packet.protoVersion = htonl(PROTO_CANCEL);
+			cancel_packet.pid = MASTER_CONNECTION(backend)->pid;
+			cancel_packet.key= MASTER_CONNECTION(backend)->key;
+			cancel_request(&cancel_packet);
 			return POOL_END;
+		}
 
 		/*
 		 * We must check deadlock error because a aborted transaction
@@ -1039,9 +1049,18 @@ POOL_STATUS Parse(POOL_CONNECTION *frontend,
 			if (!VALID_BACKEND(i) || IS_MASTER_NODE_ID(i))
 				continue;
 
-			pool_debug("waiting for %dth backend completing the query", i);
-			if (synchronize(CONNECTION(backend, i)))
+			pool_debug("Parse: waiting for %dth backend completing the query", i);
+			if (wait_for_query_response(frontend, CONNECTION(backend), string, MAJOR(backend)) != POOL_CONTINUE)
+			{
+				/* Cancel current transaction */
+				CancelPacket cancel_packet;
+
+				cancel_packet.protoVersion = htonl(PROTO_CANCEL);
+				cancel_packet.pid = MASTER_CONNECTION(backend)->pid;
+				cancel_packet.key= MASTER_CONNECTION(backend)->key;
+				cancel_request(&cancel_packet);
 				return POOL_END;
+			}
 		}
 	}
 
