@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.1.2.4 2009/09/17 11:17:09 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.1.2.5 2009/10/03 11:55:50 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -73,8 +73,6 @@ extern int execute_select; /* non 0 if select query is in transaction */
 
 /* non 0 if "BEGIN" query with extended query protocol received */
 extern int receive_extended_begin;
-/* non 0 if allow to close internal transaction */
-extern int allow_close_transaction;
 
 extern int is_select_pgcatalog;
 extern int is_select_for_update; /* also for SELECT ... INTO */
