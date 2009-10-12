@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.22 2009/10/02 07:53:08 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.23 2009/10/12 01:41:24 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -4233,6 +4233,16 @@ static bool is_internal_transaction_needed(Node *node)
 		else if (IsA(node, ClusterStmt))
 		{
 			if (((ClusterStmt *)node)->relation == NULL)
+				return false;
+		}
+
+		/*
+		 * REINDEX DATABASE or SYSTEM cannot be executed in a transaction block
+		 */
+		else if (IsA(node, ReindexStmt))
+		{
+			if (((ReindexStmt *)node)->kind == OBJECT_DATABASE ||
+				((ReindexStmt *)node)->do_system)
 				return false;
 		}
 
