@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.166 2009/10/12 01:54:52 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.167 2009/10/21 14:41:10 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -2639,9 +2639,9 @@ static POOL_STATUS do_command(POOL_CONNECTION *frontend, POOL_CONNECTION *backen
 			}
 			len = ntohl(len) - 4;
 			
-			if (kind != 'N' && kind != 'E' && kind != 'C')
+			if (kind != 'N' && kind != 'E' && kind != 'S' && kind != 'C')
 			{
-				pool_error("do_command: error, kind is not N, E or C(%02x)", kind);
+				pool_error("do_command: error, kind is not N, E, S or C(%02x)", kind);
 				return POOL_END;
 			}
 			string = pool_read2(backend, len);
@@ -4205,8 +4205,10 @@ static bool is_internal_transaction_needed(Node *node)
 		T_ExecuteStmt,
 		T_DeallocateStmt,
 		T_DeclareCursorStmt,
-		T_CreateTableSpaceStmt,
+/*
+		T_CreateTableSpaceStmt,	CREATE/DROP TABLE SPACE cannot execute inside a transaction block
 		T_DropTableSpaceStmt,
+*/
 		T_AlterObjectSchemaStmt,
 		T_AlterOwnerStmt,
 		T_DropOwnedStmt,
