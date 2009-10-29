@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.8 2009/09/06 03:52:12 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.9 2009/10/29 12:58:46 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -85,6 +85,8 @@ extern char **myargv;
 char remote_ps_data[NI_MAXHOST];		/* used for set_ps_display */
 
 volatile sig_atomic_t got_sighup = 0;
+
+int LocalSessionId;	/* Local session id */
 
 /*
 * child main loop
@@ -405,6 +407,7 @@ void do_child(int unix_fd, int inet_fd)
 		}
 
 		connected = 1;
+		LocalSessionId++;
 
  		/* show ps status */
 		sp = MASTER_CONNECTION(backend)->sp;
