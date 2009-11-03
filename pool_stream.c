@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
-* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.16 2009/08/22 04:04:21 t-ishii Exp $
+* $Header: /cvsroot/pgpool/pgpool-II/pool_stream.c,v 1.17 2009/11/03 01:51:46 t-ishii Exp $
 *
 * pgpool: a language independent connection pool server for PostgreSQL
 * written by Tatsuo Ishii
@@ -438,8 +438,16 @@ int pool_flush_it(POOL_CONNECTION *cp)
 
 		else
 		{
-			pool_error("pool_flush_it: write failed (%s) offset: %d wlen: %d",
-					   strerror(errno), offset, wlen);
+			/* If this is the backend stream, report error. Otherwise
+			 * just report debug message.
+			 */
+			if (cp->isbackend)
+				pool_error("pool_flush_it: write failed to backend (%s) offset: %d wlen: %d",
+						   strerror(errno), offset, wlen);
+			else
+				pool_debug("pool_flush_it: write failed to frontend (%s) offset: %d wlen: %d",
+						   strerror(errno), offset, wlen);
+
 			cp->wbufpo = 0;
 			return -1;
 		}
