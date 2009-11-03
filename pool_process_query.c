@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.25 2009/10/29 12:58:46 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.26 2009/11/03 01:57:00 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -2447,6 +2447,35 @@ void pool_send_error_message(POOL_CONNECTION *frontend, int protoMajor,
 							 char *file,
 							 int line)
 {
+	pool_send_severity_message(frontend, protoMajor, code, message, detail, hint, file, "ERROR", line);
+}
+
+/*
+ * send fatal message to frontend
+ */
+void pool_send_fatal_message(POOL_CONNECTION *frontend, int protoMajor,
+							 char *code,
+							 char *message,
+							 char *detail,
+							 char *hint,
+							 char *file,
+							 int line)
+{
+	pool_send_severity_message(frontend, protoMajor, code, message, detail, hint, file, "FATAL", line);
+}
+
+/*
+ * send severity message to frontend
+ */
+void pool_send_severity_message(POOL_CONNECTION *frontend, int protoMajor,
+							 char *code,
+							 char *message,
+							 char *detail,
+							 char *hint,
+							 char *file,
+							 char *severity,
+							 int line)
+{
 /*
  * Buffer length for each message part
  */
@@ -2478,7 +2507,7 @@ void pool_send_error_message(POOL_CONNECTION *frontend, int protoMajor,
 		pool_write(frontend, "E", 1);
 
 		/* error level */
-		thislen = snprintf(msgbuf, MAXMSGBUF, "SERROR");
+		thislen = snprintf(msgbuf, MAXMSGBUF, "S%s", severity);
 		thislen = Min(thislen, MAXMSGBUF);
 		memcpy(data +len, msgbuf, thislen+1);
 		len += thislen + 1;

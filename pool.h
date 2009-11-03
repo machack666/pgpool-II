@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.36.2.6 2009/10/29 12:58:46 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.36.2.7 2009/11/03 01:57:00 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -563,6 +563,21 @@ extern void pool_send_error_message(POOL_CONNECTION *frontend, int protoMajor,
 							 char *detail,
 							 char *hint,
 							 char *file,
+							 int line);
+extern void pool_send_fatal_message(POOL_CONNECTION *frontend, int protoMajor,
+							 char *code,
+							 char *message,
+							 char *detail,
+							 char *hint,
+							 char *file,
+							 int line);
+extern void pool_send_severity_message(POOL_CONNECTION *frontend, int protoMajor,
+							 char *code,
+							 char *message,
+							 char *detail,
+							 char *hint,
+							 char *file,
+							 char *severity,
 							 int line);
 extern void pool_send_readyforquery(POOL_CONNECTION *frontend);
 extern int send_startup_packet(POOL_CONNECTION_POOL_SLOT *cp);
