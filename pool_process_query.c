@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.26 2009/11/03 01:57:00 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.141.2.27 2009/11/04 13:59:55 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -3228,7 +3228,7 @@ POOL_STATUS do_query(POOL_CONNECTION *backend, char *query, POOL_SELECT_RESULT *
 								return POOL_ERROR;
 							}
 							memcpy(res->data[num_data], p, len);
-							*(res->data[num_data] + 1) = '\0';
+							*(res->data[num_data] + len) = '\0';
 
 							p += len;
 						}
