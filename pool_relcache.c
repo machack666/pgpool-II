@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_relcache.c,v 1.1.2.1 2009/10/29 12:42:43 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_relcache.c,v 1.1.2.2 2009/11/05 06:26:10 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -188,8 +188,8 @@ void *pool_search_relcache(POOL_RELCACHE *relcache, POOL_CONNECTION_POOL *backen
 	/*
 	 * Call user defined unregister/register fuction.
 	 */
-	(*relcache->unregister_func)(relcache->cache[i].data);
-	relcache->cache[i].data = (*relcache->register_func)(res);
+	(*relcache->unregister_func)(relcache->cache[index].data);
+	relcache->cache[index].data = (*relcache->register_func)(res);
 	free_select_result(res);
 
 	return 	relcache->cache[index].data;
