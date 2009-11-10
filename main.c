@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.53 2009/10/21 14:06:38 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.54 2009/11/10 02:24:41 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 		load_hba(hba_file);
 
 	/*
-	 * if a non-switch argument remains, then it should be either "reload", "stop" or "switch"
+	 * If a non-switch argument remains, then it should be either "reload" or "stop".
 	 */
 	if (optind == (argc - 1))
 	{
