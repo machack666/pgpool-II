@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.6 2009/10/03 11:57:00 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.h,v 1.7 2009/11/10 10:03:10 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -42,6 +42,7 @@ typedef struct {
 	Node *stmt;        /* parse tree for prepared statement */
 	char *sql_string;  /* original SQL statement */
 	POOL_MEMORY_POOL *prepare_ctxt; /* memory context for parse tree */
+	int num_tsparams;
 } Portal;
 
 /*

@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.170 2009/11/04 14:01:28 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.171 2009/11/10 10:03:10 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -43,6 +43,7 @@
 
 #include "pool.h"
 #include "pool_signal.h"
+#include "pool_timestamp.h"
 #include "pool_proto_modules.h"
 
 #ifndef FD_SETSIZE
@@ -1895,16 +1896,8 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 	char *p;
 	int i;
 	char *name;
+	char *rewrite_msg = NULL;
 	POOL_STATUS ret;
-
-	for (i=0;i<NUM_BACKENDS;i++)
-	{
-		if (VALID_BACKEND(i))
-		{
-			if (pool_write(CONNECTION(backend, i), &kind, 1))
-				return POOL_END;
-		}
-	}
 
 	if (pool_read(frontend, &sendlen, sizeof(sendlen)))
 	{
@@ -1913,17 +1906,20 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 
 	len = ntohl(sendlen) - 4;
 
-	for (i=0;i<NUM_BACKENDS;i++)
-	{
-		if (VALID_BACKEND(i))
-		{
-			if (pool_write(CONNECTION(backend,i), &sendlen, sizeof(sendlen)))
-				return POOL_END;
-		}
-	}
-
 	if (len == 0)
+	{
+		for (i=0;i<NUM_BACKENDS;i++)
+		{
+			if (VALID_BACKEND(i))
+			{
+				if (pool_write(CONNECTION(backend, i), &kind, 1))
+					return POOL_END;
+				if (pool_write(CONNECTION(backend,i), &sendlen, sizeof(sendlen)))
+					return POOL_END;
+			}
+		}
 		return POOL_CONTINUE;
+	}
 	else if (len < 0)
 	{
 		pool_error("SimpleForwardToBackend: invalid message length");
@@ -1934,14 +1930,53 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 	if (p == NULL)
 		return POOL_END;
 
+	if (kind == 'B')
+	{
+		Portal *portal = NULL;
+		char *stmt_name, *portal_name;
+
+		portal_name = p;
+		stmt_name = p + strlen(portal_name) + 1;
+
+		if (*stmt_name == '\0')
+			portal = unnamed_statement;
+		else
+		{
+			portal = lookup_prepared_statement_by_statement(&prepared_list, stmt_name);
+		}
+
+		/* rewrite bind message */
+		if (REPLICATION && portal && portal->num_tsparams > 0)
+		{
+			p = rewrite_msg = bind_rewrite_timestamp(backend, portal, p, &len);
+			sendlen = htonl(len + 4);
+		}
+	}
+
 	for (i=0;i<NUM_BACKENDS;i++)
 	{
 		if (VALID_BACKEND(i))
 		{
-			if (pool_write_and_flush(CONNECTION(backend, i), p, len))
+			if (pool_write(CONNECTION(backend, i), &kind, 1))
+			{
+				free(rewrite_msg);
 				return POOL_END;
+			}
+
+			if (pool_write(CONNECTION(backend,i), &sendlen, sizeof(sendlen)))
+			{
+				free(rewrite_msg);
+				return POOL_END;
+			}
+
+			if (pool_write_and_flush(CONNECTION(backend, i), p, len))
+			{
+				free(rewrite_msg);
+				return POOL_END;
+			}
 		}
 	}
+	free(rewrite_msg);
 
 	if (kind == 'B') /* Bind message */
 	{
