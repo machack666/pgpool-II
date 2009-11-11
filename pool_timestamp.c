@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_timestamp.c,v 1.1 2009/11/10 10:03:10 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_timestamp.c,v 1.2 2009/11/11 01:53:31 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -475,7 +475,7 @@ rewrite_timestamp_update(UpdateStmt *u_stmt, TSRewriteContext *ctx)
 	ListCell		*lc;
 	bool			 rewrite;
 
-	/* rewrite "update ... set col1 = now() */
+	/* rewrite "update ... set col1 = now()" */
 	raw_expression_tree_walker(
 			(Node *) u_stmt->targetList,
 			rewrite_timestamp_walker, (void *) ctx);
