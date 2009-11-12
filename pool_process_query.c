@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.171 2009/11/10 10:03:10 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.172 2009/11/12 07:04:03 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -1948,8 +1948,12 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 		/* rewrite bind message */
 		if (REPLICATION && portal && portal->num_tsparams > 0)
 		{
-			p = rewrite_msg = bind_rewrite_timestamp(backend, portal, p, &len);
-			sendlen = htonl(len + 4);
+			rewrite_msg = bind_rewrite_timestamp(backend, portal, p, &len);
+			if (rewrite_msg != NULL)
+			{
+				p = rewrite_msg;
+				sendlen = htonl(len + 4);
+			}
 		}
 	}
 
@@ -1976,7 +1980,6 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 			}
 		}
 	}
-	free(rewrite_msg);
 
 	if (kind == 'B') /* Bind message */
 	{
@@ -2004,6 +2007,7 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 				free(portal->portal_name);
 			portal->portal_name = strdup(portal_name);
 		}
+		free(rewrite_msg);
 	}
 
 	/* Close message with prepared statement name. */
