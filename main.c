@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.54 2009/11/10 02:24:41 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/main.c,v 1.55 2009/11/14 11:36:35 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -853,6 +853,7 @@ static int create_inet_domain_socket(const char *hostname, const int port)
 	int status;
 	int one = 1;
 	int len;
+	int backlog;
 
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd == -1)
@@ -902,7 +903,11 @@ static int create_inet_domain_socket(const char *hostname, const int port)
 		myexit(1);
 	}
 
-	status = listen(fd, PGPOOLMAXLITSENQUEUELENGTH);
+	backlog = pool_config->num_init_children * 2;
+	if (backlog > PGPOOLMAXLITSENQUEUELENGTH)
+		backlog = PGPOOLMAXLITSENQUEUELENGTH;
+
+	status = listen(fd, backlog);
 	if (status < 0)
 	{
 		pool_error("listen() failed. reason: %s", strerror(errno));
