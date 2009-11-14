@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.9 2009/10/29 12:58:46 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/child.c,v 1.26.2.10 2009/11/14 13:16:49 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -448,6 +448,7 @@ void do_child(int unix_fd, int inet_fd)
 						!strcmp(sp->database, "postgres") ||
 						!strcmp(sp->database, "regression"))
 					{
+						reset_variables();
 						pool_close(frontend);
 						pool_send_frontend_exits(backend);
 						pool_discard_cp(sp->user, sp->database, sp->major);
