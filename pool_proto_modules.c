@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.23 2009/11/10 10:03:10 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.24 2009/11/14 13:22:32 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1366,16 +1366,14 @@ POOL_STATUS ReadyForQuery(POOL_CONNECTION *frontend,
 			pool_write(frontend, &len, sizeof(len));
 			pool_write(frontend, &state, 1);
 		}
-
-		if (pool_flush(frontend))
-			return POOL_END;
+		pool_flush(frontend);
 	}
 
 	in_progress = 0;
 
 	/* end load balance mode */
 	if (in_load_balance)
-		end_load_balance(backend);
+		end_load_balance();
 
 	if (master_slave_dml)
 	{
