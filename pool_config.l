@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.24 2009/01/25 10:13:15 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.l,v 1.24.2.1 2009/11/14 11:37:42 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1119,10 +1119,21 @@ int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context)
 
 			pool_debug("pool_config: weight slot number %d weight: %f", slot, v);
 			status = BACKEND_INFO(slot).backend_status;
-			if (context == INIT_CONFIG ||
-				(context == RELOAD_CONFIG && (context == RELOAD_CONFIG && (status == CON_UNUSED || status == CON_DOWN))))
+
+			if (context == INIT_CONFIG || context == RELOAD_CONFIG)
 			{
+				double old_v = pool_config->backend_desc->backend_info[slot].unnormalized_weight;
 				pool_config->backend_desc->backend_info[slot].unnormalized_weight = v;
+
+				/*
+				 * Log weight change event only when context is
+				 * reloading of pgpool.conf and weight is actually
+				 * changed
+				 */
+				if (context == RELOAD_CONFIG && old_v != v)
+				{
+					pool_log("Backend weight for backend%d changed from %f to %f. This will take effect from next client session.", slot, old_v, v);
+				}
 			}
 		}
 		else if (!strncmp(key, "backend_data_directory", 22) &&
