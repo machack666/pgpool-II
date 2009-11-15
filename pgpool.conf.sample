@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.27 2009/11/12 07:37:27 t-ishii Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.28 2009/11/15 08:27:35 t-ishii Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -136,6 +136,10 @@ ignore_leading_white_space = true
 # to PostgreSQL, this allows for observing queries without engaging in full
 # debugging.
 log_statement = false
+
+# If true, print all statements to the log. Similar to log_statement except
+# that prints DB node id and backend process id info.
+log_per_node_statement = false
 
 # If true, incoming connections will be printed to the log.
 log_connections = false
