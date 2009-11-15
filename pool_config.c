@@ -485,7 +485,7 @@ char *yytext;
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.c,v 1.29 2009/11/14 11:41:17 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.c,v 1.30 2009/11/15 08:05:02 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -522,7 +522,7 @@ int yylex(void);
 POOL_CONFIG *pool_config;	/* configuration values */
 POOL_SYSTEMDB_CONNECTION_POOL *system_db_info;
 static unsigned Lineno;
-static char *default_reset_query_list[] = {"ABORT", "RESET ALL", "SET SESSION AUTHORIZATION DEFAULT"};
+static char *default_reset_query_list[] = {"ABORT", "DISCARD ALL"};
 
 typedef enum {
   POOL_KEY = 1,
