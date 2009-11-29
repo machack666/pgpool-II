@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.6.2.16 2009/11/14 13:16:48 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.6.2.17 2009/11/29 08:29:14 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1542,6 +1542,16 @@ POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 
 		case 'P':  /* Parse message */
 			allow_close_transaction = 0;
+
+			if (MASTER_SLAVE &&
+				(TSTATE(backend) != 'I' || receive_extended_begin))
+			{
+				pool_debug("kind: %c master_slave_dml enabled", fkind);
+				master_slave_was_enabled = 1;
+				MASTER_SLAVE = 0;
+				master_slave_dml = 1;
+			}
+
 			status = Parse(frontend, backend);
 			break;
 
