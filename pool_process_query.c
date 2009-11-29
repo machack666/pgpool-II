@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.174 2009/11/15 08:27:35 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.175 2009/11/29 08:42:18 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -1912,6 +1912,11 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 		{
 			if (VALID_BACKEND(i))
 			{
+				char msgbuf[128];
+
+				snprintf(msgbuf, sizeof(msgbuf), "%c message", kind);
+				per_node_statement_log(backend, i, msgbuf);
+
 				if (pool_write(CONNECTION(backend, i), &kind, 1))
 					return POOL_END;
 				if (pool_write(CONNECTION(backend,i), &sendlen, sizeof(sendlen)))
@@ -1961,6 +1966,11 @@ POOL_STATUS SimpleForwardToBackend(char kind, POOL_CONNECTION *frontend, POOL_CO
 	{
 		if (VALID_BACKEND(i))
 		{
+			char msgbuf[128];
+
+			snprintf(msgbuf, sizeof(msgbuf), "%c message", kind);
+			per_node_statement_log(backend, i, msgbuf);
+
 			if (pool_write(CONNECTION(backend, i), &kind, 1))
 			{
 				free(rewrite_msg);
