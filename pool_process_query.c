@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.175 2009/11/29 08:42:18 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.176 2009/11/29 11:56:59 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -2297,11 +2297,8 @@ int load_balance_enabled(POOL_CONNECTION_POOL *backend, Node* node, char *sql)
  * returns non 0 if the SQL statement can be load
  * balanced. Followings are statemnts go into this category.
  *
- * - SELECT without FOR UPDATE/SHARE
+ * - SELECT/WITH without FOR UPDATE/SHARE
  * - COPY TO STDOUT
- * - DECLARE..SELECT (without INTO nor FOR UPDATE/SHARE)
- * - FETCH
- * - CLOSE
  *
  * note that for SELECT INTO, this function returns 0
  */
@@ -2330,27 +2327,17 @@ int is_select_query(Node *node, char *sql)
 			sql++;
 	}
 
-	if (IsA(node, SelectStmt) || IsA(node, DeclareCursorStmt))
+	if (IsA(node, SelectStmt))
 	{
 		SelectStmt *select_stmt;
 
-		if (IsA(node, SelectStmt))
-			 select_stmt = (SelectStmt *)node;
-		else
-			select_stmt = (SelectStmt *)((DeclareCursorStmt *)node)->query;
+		select_stmt = (SelectStmt *)node;
 
 		if (select_stmt->intoClause || select_stmt->lockingClause)
 			return 0;
 
-		if (IsA(node, SelectStmt))
-			return (*sql == 's' || *sql == 'S' || *sql == '(' ||
-					*sql == 'w' || *sql == 'W' || *sql == 't' || *sql == 'T');
-		else
-			return (*sql == 'd' || *sql == 'D');
-	}
-	else if (IsA(node, FetchStmt) || IsA(node, ClosePortalStmt))
-	{
-		return (*sql == 'f' || *sql == 'F' || *sql == 'c' || *sql == 'C');
+		return (*sql == 's' || *sql == 'S' || *sql == '(' ||
+				*sql == 'w' || *sql == 'W' || *sql == 't' || *sql == 'T');
 	}
 	else if (IsA(node, CopyStmt))
 	{
