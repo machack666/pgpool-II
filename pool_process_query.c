@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.176 2009/11/29 11:56:59 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.177 2009/12/02 14:19:56 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -149,6 +149,8 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 			}
 
 		}
+
+		check_stop_request();
 
 		/*
 		 * if all backends do not have any pending data in the
