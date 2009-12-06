@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.27 2009/12/06 07:46:57 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.28 2009/12/06 07:52:49 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1268,8 +1268,7 @@ POOL_STATUS Parse(POOL_CONNECTION *frontend,
 			return ret;
 
 		SimpleForwardToFrontend(kind, frontend, backend);
-		if (pool_flush(frontend) < 0)
-			return POOL_ERROR;
+		pool_flush(frontend);
 
 		/* Ignore warning messages */
 		if (kind != 'N')
