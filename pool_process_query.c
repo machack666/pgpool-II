@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.179 2009/12/06 07:52:49 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.180 2009/12/06 08:46:34 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -282,6 +282,7 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 						 */
 						if (detect_postmaster_down_error(CONNECTION(backend, i), MAJOR(backend)) == SPECIFIED_ERROR)
 						{
+							pool_log("postmaster on DB node %d was shutdown by administrative command", i);
 							/* detach backend node. */
 							was_error = 1;
 							if (!VALID_BACKEND(i))

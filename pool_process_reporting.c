@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_reporting.c,v 1.1 2009/12/06 07:43:59 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_reporting.c,v 1.2 2009/12/06 08:46:34 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -198,6 +198,11 @@ void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *backend)
 	strncpy(status[i].name, "failback_command", POOLCONFIG_MAXNAMELEN);
 	snprintf(status[i].value, POOLCONFIG_MAXVALLEN, "%s", pool_config->failover_command);
 	strncpy(status[i].desc, "failback command", POOLCONFIG_MAXDESCLEN);
+	i++;
+
+	strncpy(status[i].name, "fail_over_on_backend_error", POOLCONFIG_MAXNAMELEN);
+	snprintf(status[i].value, POOLCONFIG_MAXVALLEN, "%d", pool_config->insert_lock);
+	strncpy(status[i].desc, "fail_over_on_backend_error", POOLCONFIG_MAXDESCLEN);
 	i++;
 
 	strncpy(status[i].name, "insert_lock", POOLCONFIG_MAXNAMELEN);

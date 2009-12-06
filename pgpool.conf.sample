@@ -1,6 +1,6 @@
 #
 # pgpool-II configuration file sample
-# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.28 2009/11/15 08:27:35 t-ishii Exp $
+# $Header: /cvsroot/pgpool/pgpool-II/pgpool.conf.sample,v 1.29 2009/12/06 08:46:34 t-ishii Exp $
 
 # Host name or IP address to listen on: '*' for all, '' for no TCP/IP
 # connections
@@ -119,6 +119,12 @@ failover_command = ''
 #                  %% = '%' character
 #
 failback_command = ''
+
+# If true, trigger fail over when writing to the backend communication
+# socket fails. This is the same behavior of pgpool-II 2.2.x or
+# earlier. If set to false, pgpool will report an error and disconnect
+# the session.
+fail_over_on_backend_error = true
 
 # If true, automatically locks a table with INSERT statements to keep
 # SERIAL data consistency.  If the data does not have SERIAL data

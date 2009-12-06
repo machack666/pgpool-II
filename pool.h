@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.46 2009/12/02 14:19:56 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.47 2009/12/06 08:46:34 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -161,6 +161,15 @@ typedef struct {
 	char *health_check_user;		/* PostgreSQL user name for health check */
 	char *failover_command;     /* execute command when failover happens */
 	char *failback_command;     /* execute command when failback happens */
+
+	/*
+	 * If true, trigger fail over when writing to the backend
+	 * communication socket fails. This is the same behavior of
+	 * pgpool-II 2.2.x or earlier. If set to false, pgpool will report
+	 * an error and disconnect the session.
+	 */
+	int	fail_over_on_backend_error;
+
 	char *recovery_user;		/* PostgreSQL user name for online recovery */
 	char *recovery_password;		/* PostgreSQL user password for online recovery */
 	char *recovery_1st_stage_command;   /* Online recovery command in 1st stage */

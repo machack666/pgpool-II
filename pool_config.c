@@ -485,7 +485,7 @@ char *yytext;
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_config.c,v 1.31 2009/11/15 08:27:35 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_config.c,v 1.32 2009/12/06 08:46:34 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -1883,6 +1883,7 @@ int pool_init_config(void)
 	pool_config->health_check_user = "nobody";
 	pool_config->failover_command = "";
 	pool_config->failback_command = "";
+	pool_config->fail_over_on_backend_error = 1;
 	pool_config->insert_lock = 1;
 	pool_config->ignore_leading_white_space = 1;
 	pool_config->parallel_mode = 0;
@@ -2474,6 +2475,20 @@ int pool_get_config(char *confpath, POOL_CONFIG_CONTEXT context)
 				return(-1);
 			}
 			pool_config->failback_command = str;
+		}
+
+		else if (!strcmp(key, "fail_over_on_backend_error") &&
+				 CHECK_CONTEXT(INIT_CONFIG|RELOAD_CONFIG, context))
+		{
+			int v = eval_logical(yytext);
+
+			if (v < 0)
+			{
+				pool_error("pool_config: invalid value %s for %s", yytext, key);
+				fclose(fd);
+				return(-1);
+			}
+			pool_config->fail_over_on_backend_error = v;
 		}
 
 		else if (!strcmp(key, "recovery_user") &&
