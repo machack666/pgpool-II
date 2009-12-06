@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.26 2009/12/02 14:11:21 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_proto_modules.c,v 1.27 2009/12/06 07:46:57 t-ishii Exp $
  * 
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -555,6 +555,56 @@ POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 					len = strlen(string) + 1;
 				}
 
+			}
+
+			/*
+			 * Optimization effort: If there's only one session, we do
+			 * not need to wait for the master node's response, and
+			 * could execute a query concurrently.
+			 */
+			if (pool_config->num_init_children == 1)
+			{
+				/* Send query to DB nodes */
+				for (i=0;i<NUM_BACKENDS;i++)
+				{
+					if (!VALID_BACKEND(i))
+						continue;
+
+					per_node_statement_log(backend, i, string);
+
+					if (send_simplequery_message(CONNECTION(backend, i), len, string, MAJOR(backend)) != POOL_CONTINUE)
+					{
+						free_parser();
+						return POOL_END;
+					}
+				}
+
+				/* Wait for response from DB nodes */
+				for (i=0;i<NUM_BACKENDS;i++)
+				{
+					if (!VALID_BACKEND(i))
+						continue;
+
+					if (wait_for_query_response(frontend, CONNECTION(backend, i), string, MAJOR(backend)) != POOL_CONTINUE)
+					{
+						/* Cancel current transaction */
+						CancelPacket cancel_packet;
+
+						cancel_packet.protoVersion = htonl(PROTO_CANCEL);
+						cancel_packet.pid = MASTER_CONNECTION(backend)->pid;
+						cancel_packet.key= MASTER_CONNECTION(backend)->key;
+						cancel_request(&cancel_packet);
+
+						free_parser();
+						return POOL_END;
+					}
+				}
+				if (commit)
+				{
+					TSTATE(backend) = 'I';
+				}
+				free_parser();
+				return POOL_CONTINUE;
 			}
 
 			/* Send the query to master node */
