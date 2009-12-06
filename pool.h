@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.47 2009/12/06 08:46:34 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool.h,v 1.48 2009/12/06 12:55:08 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -57,6 +57,9 @@
 
 /* pid file name */
 #define DEFAULT_PID_FILE_NAME "/var/run/pgpool/pgpool.pid"
+
+/* status file name */
+#define STATUS_FILE_NAME "pgpool_status"
 
 typedef enum {
 	POOL_CONTINUE = 0,

@@ -1,7 +1,7 @@
 /* -*-pgsql-c-*- */
 /*
  *
- * $Header: /cvsroot/pgpool/pgpool-II/pool_type.h,v 1.10 2009/07/30 14:44:21 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_type.h,v 1.11 2009/12/06 12:55:08 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL 
  * written by Tatsuo Ishii
@@ -188,6 +188,13 @@ typedef struct {
 	QueryCacheTableInfo query_cache_table_info; /* query cache db session info */
 	BACKEND_STATUS system_db_status;
 } SystemDBInfo;
+
+/*
+ * Backend status record file
+ */
+typedef struct {
+	BACKEND_STATUS status[MAX_NUM_BACKENDS];
+} BackendStatusRecord;
 
 /*
  *  It seems that sockaddr_storage is now commonly used in place of sockaddr.
