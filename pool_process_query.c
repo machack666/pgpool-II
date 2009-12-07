@@ -1,6 +1,6 @@
 /* -*-pgsql-c-*- */
 /*
- * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.180 2009/12/06 08:46:34 t-ishii Exp $
+ * $Header: /cvsroot/pgpool/pgpool-II/pool_process_query.c,v 1.181 2009/12/07 08:11:58 t-ishii Exp $
  *
  * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
@@ -1827,6 +1827,8 @@ int load_balance_enabled(POOL_CONNECTION_POOL *backend, Node* node, char *sql)
  *
  * - SELECT/WITH without FOR UPDATE/SHARE
  * - COPY TO STDOUT
+ * - EXPLAIN
+ * - EXPLAIN ANALYZE and query is SELECT
  *
  * note that for SELECT INTO, this function returns 0
  */
@@ -1872,6 +1874,19 @@ int is_select_query(Node *node, char *sql)
 		CopyStmt *copy_stmt = (CopyStmt *)node;
 		return (copy_stmt->is_from == FALSE &&
 				copy_stmt->filename == NULL);
+	}
+	else if (IsA(node, ExplainStmt))
+	{
+		ExplainStmt * explain_stmt = (ExplainStmt *)node;
+
+		if (explain_stmt->analyze)
+		{
+			Node *query = explain_stmt->query;
+
+			return (IsA(query, SelectStmt));
+		}
+		else
+			return 1;
 	}
 	return 0;
 }
